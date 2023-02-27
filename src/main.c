@@ -1,0 +1,208 @@
+/**
+ * \file
+ *
+ * \brief Empty user application template
+ *
+ */
+
+/**
+ * \mainpage User Application template doxygen documentation
+ *
+ * \par Empty user application template
+ *
+ * Bare minimum empty user application template
+ *
+ * \par Content
+ *
+ * -# Include the ASF header files (through asf.h)
+ * -# "Insert system clock initialization code here" comment
+ * -# Minimal main function that starts with a call to board_init()
+ * -# "Insert application code here" comment
+ *
+ */
+
+/*
+ * Include header files for all drivers that have been imported from
+ * Atmel Software Framework (ASF).
+ */
+/*
+ * Support and FAQ: visit <a href="https://www.microchip.com/support/">Microchip Support</a>
+ */
+#include <asf.h>
+#include "conf_board.h"
+#include "conf_clock.h"
+
+//user-defined files
+#include "wifi.h"
+#include "camera.h"
+#include "helpers/ov2640.h"
+#include "timer_interface.h"
+
+char* pbuf_test[50];
+
+
+
+
+int main (void)
+{
+	 //Initialize clock and board definitions.
+	sysclk_init();
+	wdt_disable(WDT);
+	ioport_init();
+	board_init();
+	
+	//* Configure and start the Timer. (Look in the “timer interface” functions.)
+	configure_tc();
+	
+	 
+	
+	 
+	//* Configure the WiFi USART and SPI, as well as the “command complete” and “provision”
+	//pins (interrupts).
+	NVIC_DisableIRQ(SPI_IRQn);
+	NVIC_ClearPendingIRQ(SPI_IRQn);
+	NVIC_SetPriority(SPI_IRQn, 0);
+	NVIC_EnableIRQ(SPI_IRQn);
+	
+	spi_peripheral_initialize();
+	 
+	 //* Configure the indicators and the “command complete”, ”network”, and ”clients” GPIOs
+	 //through the UART interface of the ESP32 (detailed in Section 2).
+	 
+	 
+	 //* Initialize and configure the camera.
+	 
+	 
+	 //* Reset the WiFi and wait for it to connect to a network. While waiting, make sure to listen
+	 //for the “provision” pin.
+	 
+	 
+	 //* Send “test” to the WiFi module and wait for a response of “SUCCESS”. If you do not receive
+	 //it, wait 10 seconds, reset the WiF module, and try again.
+	 
+	 sprintf(pbuf_test, 0x746573740a); //this says "text", converted to hex
+
+	// Thomas' Main Code Loop Code
+	sysclk_init();
+	wdt_disable(WDT);
+	ioport_init();
+
+	configure_tc();
+	board_init();
+
+	configure_usart();
+	configure_wifi_comm_pin();
+	configure_wifi_provision_pin();
+
+	configure_spi();
+
+	//init_camera();
+
+	ioport_set_pin_dir(LED_PIN,IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(LED_PIN,false);
+	ioport_set_pin_dir(LED_PIN2,IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(LED_PIN2,false);
+
+
+	// Control line pin ioport config
+	ioport_set_pin_dir(WIFI_COMM_MASK,IOPORT_DIR_INPUT);
+	ioport_set_pin_dir(WIFI_NET_MASK,IOPORT_DIR_INPUT);
+	ioport_set_pin_dir(WIFI_CLIENT_PIN_MASK,IOPORT_DIR_INPUT);
+
+	// Pushbutton pin ioport config
+	ioport_set_pin_dir(WIFI_SETUP_BUTTON_MASK, IOPORT_DIR_INPUT);
+	ioport_set_pin_mode(WIFI_SETUP_BUTTON_MASK,IOPORT_MODE_PULLUP);
+	ioport_set_pin_dir(WIFI_RESET_MASK, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_mode(WIFI_RESET_MASK, IOPORT_MODE_PULLDOWN);
+
+	// Reset wifi chip
+	ioport_set_pin_level(WIFI_RESET_MASK,false);
+	delay_ms(500);
+	ioport_set_pin_level(WIFI_RESET_MASK,true);
+	delay_ms(500);
+
+
+	// Set Control Line pins on ESP32
+	char buff[100];
+	sprintf (buff, "set comm_gpio %d",ESP_COMM_GPIO);
+	write_wifi_command(buff,2);
+	sprintf (buff, "set net_gpio %d", ESP_NET_GPIO);
+	write_wifi_command(buff,2);
+	sprintf (buff, "set clients_gpio %d", ESP_CLIENT_GPIO);
+	write_wifi_command(buff,2);
+
+	// Send ESP32 indicator LED config commands
+	sprintf (buff, "set wlan_gpio %d", ESP_NET_LED);
+	write_wifi_command(buff,2);
+	sprintf (buff, "set websocket_gpio %d", ESP_CLIENT_LED);
+	write_wifi_command(buff,2);
+	sprintf (buff, "set ap_gpio %d", ESP_PROV_LED);
+	write_wifi_command(buff,2);
+
+	//write_wifi_command("test",10);
+
+	reading_wifi_flag = false;
+	provisioning_flag = false;
+
+	/* Insert application code here, after the board has been initialized. */
+
+
+	// Loop while waiting for UART connection confirmation
+	while (!ioport_get_pin_level(WIFI_NET_MASK))	{
+		ioport_set_pin_level(LED_PIN,true);
+		//ioport_set_pin_level(WIFI_RESET_MASK,true);
+		// Check if WIFI_SETUP_BUTTON was pressed and send provision command if so
+		if (provisioning_flag) {
+			write_wifi_command("provision",1);
+			provisioning_flag = false;
+			//ioport_set_pin_level(LED_PIN2,false);
+			//delay_s(1);
+			//ioport_set_pin_level(LED_PIN2,true);
+		}
+	}
+
+	while (!reading_wifi_flag)	{
+		// Reset wifi chip
+		ioport_set_pin_level(WIFI_RESET_MASK,false);
+		delay_ms(500);
+		ioport_set_pin_level(WIFI_RESET_MASK,true);
+		delay_ms(500);
+	
+		ioport_set_pin_level(LED_PIN,true);
+		delay_ms(500);
+		//ioport_set_pin_level(LED_PIN,false);
+	
+		// Send UART Test command and wait 10 seconds
+		write_wifi_command("test",10);
+		delay_s(1);
+	
+	}
+
+
+	// Start Main Loop
+	while (1)	{
+		// Check if WIFI_SETUP_BUTTON was pressed and send provision command if so
+		//ioport_set_pin_level(LED_PIN,false);
+		ioport_set_pin_level(LED_PIN2,true);
+		if (provisioning_flag) {
+			write_wifi_command("provision",1);
+			ioport_set_pin_level(LED_PIN,true);
+			delay_s(2);
+			ioport_set_pin_level(LED_PIN,false);
+			provisioning_flag = false;
+		}
+	
+		if (ioport_get_pin_level(WIFI_NET_MASK)) {// & ioport_get_pin_level(WIFI_CLIENT_PIN_MASK))	{
+			// Send image command
+			//write_image_to_web();
+			ioport_set_pin_level(LED_PIN,true);
+			delay_s(1);
+			ioport_set_pin_level(LED_PIN,false);
+		}
+	
+	}
+	
+}
+
+
+
