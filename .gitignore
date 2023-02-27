@@ -1,0 +1,9 @@
+
+*.d
+*.o
+*.cproj
+*.xml
+*.mk
+MCU_firmware_326/.vs/MCU_firmware_326/v14/.atsuo
+MCU_firmware_326/MCU_firmware_326_Project/Debug/Makefile
+MCU_firmware_326/MCU_firmware_326_Project/src/ASF/
