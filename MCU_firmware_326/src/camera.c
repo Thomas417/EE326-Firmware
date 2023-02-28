@@ -100,22 +100,36 @@ void init_camera(void){
 	while (!(PMC->PMC_SCSR & PMC_SCSR_PCK0)) {
 	}
 	
+	/* Turn on ov7740 image sensor using power pin */
+	ov_power(true, OV_POWER_PIO, OV_POWER_MASK);
+	
+	/* Init PCK0 to work at 24 Mhz */
+	/* 96/4=24 Mhz */
+	PMC->PMC_PCK[0] = (PMC_PCK_PRES_CLK_4 | PMC_PCK_CSS_PLLA_CLK);
+	PMC->PMC_SCER = PMC_SCER_PCK0;
+	while (!(PMC->PMC_SCSR & PMC_SCSR_PCK0)) {
+	}
+	
+	configure_twi();
+	
 }
 
 void configure_camera(void){
+	//Configuration of OV2640 registers for desired operation.
 	ov_configure(BOARD_TWI, JPEG_INIT);
 	ov_configure(BOARD_TWI, YUV422);
 	ov_configure(BOARD_TWI, JPEG);
 	ov_configure(BOARD_TWI, JPEG_320x240);
 	
 	//there may be more to it than this
+
 }
 
 void pio_capture_init(Pio *p_pio, uint32_t ul_id){
 	//Configuration and initialization of parallel
 	//capture.
 	
-	/* Enable peripheral clock */
+	///* Enable peripheral clock */
 	pmc_enable_periph_clk(ul_id);
 
 	/* Disable PIO capture */
@@ -171,7 +185,7 @@ uint8_t start_capture(void){
 
 uint8_t find_image_len(void){
 	//Finds image length based on JPEG protocol. Returns 1 on success
-	//(i.e. able to find “end of image” and “start of image” markers),
+	//(i.e. able to find ï¿½end of imageï¿½ and ï¿½start of imageï¿½ markers),
 	// 0 on error.
 	
 	//iterate through the buffer and look for start and end of image markers

@@ -48,22 +48,22 @@ int main (void)
 	ioport_init();
 	board_init();
 	
-	//* Configure and start the Timer. (Look in the “timer interface” functions.)
+	//* Configure and start the Timer. (Look in the ï¿½timer interfaceï¿½ functions.)
 	configure_tc();
 	
-	//* Configure the WiFi USART and SPI, as well as the “command complete” and “provision”
+	//* Configure the WiFi USART and SPI, as well as the ï¿½command completeï¿½ and ï¿½provisionï¿½
 	//pins (interrupts).
-	NVIC_DisableIRQ(SPI_IRQn);
-	NVIC_ClearPendingIRQ(SPI_IRQn);
-	NVIC_SetPriority(SPI_IRQn, 0);
-	NVIC_EnableIRQ(SPI_IRQn);
+	//NVIC_DisableIRQ(SPI_IRQn);
+	//NVIC_ClearPendingIRQ(SPI_IRQn);
+	//NVIC_SetPriority(SPI_IRQn, 0);
+	//NVIC_EnableIRQ(SPI_IRQn);
 	
 	configure_usart();
 	configure_spi();
 	configure_wifi_comm_pin();
 	configure_wifi_provision_pin();
 	 
-	 //* Configure the indicators and the “command complete”, ”network”, and ”clients” GPIOs
+	 //* Configure the indicators and the ï¿½command completeï¿½, ï¿½networkï¿½, and ï¿½clientsï¿½ GPIOs
 	 //through the UART interface of the ESP32 (detailed in Section 2).
 	 
 	 
@@ -72,9 +72,9 @@ int main (void)
 	 configure_camera();
 	 
 	 //* Reset the WiFi and wait for it to connect to a network. While waiting, make sure to listen
-	 //for the “provision” pin.	 
+	 //for the ï¿½provisionï¿½ pin.	 
 	 
-	 //* Send “test” to the WiFi module and wait for a response of “SUCCESS”. If you do not receive
+	 //* Send ï¿½testï¿½ to the WiFi module and wait for a response of ï¿½SUCCESSï¿½. If you do not receive
 	 //it, wait 10 seconds, reset the WiFi module, and try again.
 	 
 	// Thomas' Main Code Loop Code
@@ -138,9 +138,9 @@ int main (void)
 		if (provisioning_flag) {
 			write_wifi_command("provision",1);
 			provisioning_flag = false;
-			//ioport_set_pin_level(LED_PIN2,false);
-			//delay_s(1);
-			//ioport_set_pin_level(LED_PIN2,true);
+			ioport_set_pin_level(LED_PIN2,false);
+			delay_s(1);
+			ioport_set_pin_level(LED_PIN2,true);
 		}
 	}
 
@@ -151,8 +151,8 @@ int main (void)
 		ioport_set_pin_level(WIFI_RESET_MASK,true);
 		delay_ms(500);
 	
-		ioport_set_pin_level(LED_PIN,true);
-		delay_ms(500);
+		//ioport_set_pin_level(LED_PIN,true);
+		//delay_ms(500);
 		//ioport_set_pin_level(LED_PIN,false);
 	
 		// Send UART Test command and wait 10 seconds
@@ -169,9 +169,9 @@ int main (void)
 		ioport_set_pin_level(LED_PIN2,true);
 		if (provisioning_flag) {
 			write_wifi_command("provision",1);
-			ioport_set_pin_level(LED_PIN,true);
-			delay_s(2);
-			ioport_set_pin_level(LED_PIN,false);
+			//ioport_set_pin_level(LED_PIN,true);
+			//delay_s(2);
+			//ioport_set_pin_level(LED_PIN,false);
 			provisioning_flag = false;
 		}
 	
