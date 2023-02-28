@@ -25,6 +25,7 @@
 #define PIN_USART0_RXD	  {PIO_PA5A_RXD0, PIOA, ID_PIOA, PIO_PERIPH_A, PIO_PULLUP}
 #define PIN_USART0_RXD_IDX        (PIO_PA5_IDX)
 #define PIN_USART0_RXD_FLAGS      (PIO_PERIPH_A | PIO_PULLUP)
+
 /** USART0 pin TX */
 #define PIN_USART0_TXD    {PIO_PA6A_TXD0, PIOA, ID_PIOA, PIO_PERIPH_A, PIO_PULLUP}
 #define PIN_USART0_TXD_IDX        (PIO_PA6_IDX)
@@ -80,17 +81,6 @@
 #define ESP_PROV_LED					26	// Indicator LED Pin (ON ESP32): Chip is in provisioning mode
 #define ESP_NET_LED						25	// Indicator LED Pin (ON ESP32): Chip is connected to the internet
 #define ESP_CLIENT_LED					27	// Indicator LED Pin (ON ESP32): Chip has at least one client connected
-
-
-
-
-
-
-
-
-
-
-
 
 //
 ////DEFINE WiFi SPI parameters + pin definitions here

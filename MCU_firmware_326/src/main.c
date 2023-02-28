@@ -106,7 +106,6 @@ int main (void)
 
 
 	// Set Control Line pins on ESP32
-	char buff[100];
 	sprintf (buff, "set comm_gpio %d",ESP_COMM_GPIO);
 	write_wifi_command(buff,2);
 	sprintf (buff, "set net_gpio %d", ESP_NET_GPIO);
