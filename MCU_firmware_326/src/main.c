@@ -42,7 +42,7 @@ char* pbuf_test[50];
 
 int main (void)
 {
-	 //Initialize clock and board definitions.
+	//Initialize clock and board definitions.
 	sysclk_init();
 	wdt_disable(WDT);
 	ioport_init();
