@@ -9,14 +9,14 @@
 
 //INITIALIZE camera variables here
 /* LCD board defines. */
-#define ILI9325_LCD_CS                 (2UL) // Chip select number
+//#define ILI9325_LCD_CS                 (2UL) // Chip select number
 #define IMAGE_WIDTH                    (320UL)
 #define IMAGE_HEIGHT                   (240UL)
 
 #define TWI_CLK     (400000UL) /* TWI clock frequency in Hz (400KHz) */
 uint8_t *g_p_uc_cap_dest_buf; /* Pointer to the image data destination buffer */
 uint16_t g_us_cap_rows = IMAGE_HEIGHT; /* Rows size of capturing picture */
-ul_size = 100000000; 
+//ul_size = 100000000; 
 
 /* Define display function and line size of captured picture according to the */
 /* current mode (color or black and white) */
@@ -46,41 +46,68 @@ void init_vsync_interrupts(void){
 	//Configuration of VSYNC interrupt.
 	/* Initialize PIO interrupt handler, see PIO definition in conf_board.h
 	**/
-	//pio_handler_set(OV7740_VSYNC_PIO, OV7740_VSYNC_ID, OV7740_VSYNC_MASK,
-			//OV7740_VSYNC_TYPE, vsync_handler);
-
-
-	//sample style of what the different terms should look like
-	//see conf_board.h in sample project for the 7740 stuff
-	//#define OV2640_VSYNC_GPIO //PIO_PA15_IDX
-	//#define OV2640_VSYNC_PIO //PIOA
-	//#define OV2640_VSYNC_ID //ID_PIOA
-	//#define OV2640_VSYNC_MASK //PIO_PA15
-	//#define OV2640_VSYNC_TYPE //PIO_PULLUP
-	
+	pio_handler_set(OV7740_VSYNC_PIO, OV7740_VSYNC_ID, OV7740_VSYNC_MASK,
+			OV7740_VSYNC_TYPE, vsync_handler);	
 
 	/* Enable PIO controller IRQs */
-	//NVIC_EnableIRQ((IRQn_Type)OV7740_VSYNC_ID);
+	NVIC_EnableIRQ((IRQn_Type)OV7740_VSYNC_ID);
 }
 
 void configure_twi(void){
 	//Configuration of TWI (two wire interface)
-	
+	twi_options_t opt;
+
+	/* Enable TWI peripheral */
+	pmc_enable_periph_clk(ID_BOARD_TWI);
+
+	/* Init TWI peripheral */
+	opt.master_clk = sysclk_get_cpu_hz();
+	opt.speed      = TWI_CLK;
+	twi_master_init(BOARD_TWI, &opt);
+
+	/* Configure TWI interrupts */
+	NVIC_DisableIRQ(BOARD_TWI_IRQn);
+	NVIC_ClearPendingIRQ(BOARD_TWI_IRQn);
+	NVIC_SetPriority(BOARD_TWI_IRQn, 0);
+	NVIC_EnableIRQ(BOARD_TWI_IRQn);
+
+	/* ov7740 Initialization */
+	while (ov_init(BOARD_TWI) == 1) {
+	}
 }
 
 void init_camera(void){
 	//Configuration of camera pins, camera clock (XCLK), and
 	//calling the configure_twi() function.
+	configure_twi();
+	
+	//configure camera pins
+	//configure camera clock
+	
+	/* Init Vsync handler*/
+	init_vsync_interrupts();
+
+	/* Init PIO capture*/
+	pio_capture_init(OV_DATA_BUS_PIO, OV_DATA_BUS_ID);
+
+	/* Turn on ov7740 image sensor using power pin */
+	ov_power(true, OV_POWER_PIO, OV_POWER_MASK);
+
+	/* Init PCK0 to work at 24 Mhz */
+	/* 96/4=24 Mhz */
+	PMC->PMC_PCK[0] = (PMC_PCK_PRES_CLK_4 | PMC_PCK_CSS_PLLA_CLK);
+	PMC->PMC_SCER = PMC_SCER_PCK0;
+	while (!(PMC->PMC_SCSR & PMC_SCSR_PCK0)) {
+	}
 	
 }
 
 void configure_camera(void){
-	//Configuration of OV2640 registers for desired operation.
-	//ov_configure(BOARD_TWI, JPEG_INIT);
-	//ov_configure(BOARD_TWI, YUV422);
-	//ov_configure(BOARD_TWI, JPEG);
-	//ov_configure(BOARD_TWI, JPEG_320x240);
-	//
+	ov_configure(BOARD_TWI, JPEG_INIT);
+	ov_configure(BOARD_TWI, YUV422);
+	ov_configure(BOARD_TWI, JPEG);
+	ov_configure(BOARD_TWI, JPEG_320x240);
+	
 	//there may be more to it than this
 }
 
@@ -138,7 +165,7 @@ uint8_t start_capture(void){
 
 	pio_capture_to_buffer(p_pio, p_uc_buf, ul_size);
 	uint8_t len_success = find_image_len();
-	return (ul_size > 0);
+	return (image_size > 0);
 	
 }
 

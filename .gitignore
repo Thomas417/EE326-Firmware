@@ -16,3 +16,11 @@ MCU_firmware_326/MCU_firmware_326_Project/src/ASF/
 *.srec
 *.atsln
 MCU_firmware_326/src/ASF
+.vs/MCU_firmware_326/v14/.atsuo
+MCU_firmware_326/jlink.1.log
+MCU_firmware_326/jlink.2.log
+MCU_firmware_326/jlink.3.log
+MCU_firmware_326/jlink.4.log
+MCU_firmware_326/jlink.5.log
+MCU_firmware_326/jlink.config
+MCU_firmware_326/jlink.log

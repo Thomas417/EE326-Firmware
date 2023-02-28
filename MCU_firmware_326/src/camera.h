@@ -18,7 +18,7 @@
 uint32_t ul_id, ul_mask; //things in the interrupt function definition by default
 Pio *p_pio;
 uint8_t *p_uc_buf; //buffer to store the image in
-//uint32_t ul_size; //size of the buffer
+uint32_t ul_size; //size of the buffer
 
 uint32_t image_size;
 

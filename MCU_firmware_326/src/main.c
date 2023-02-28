@@ -40,9 +40,6 @@
 
 char* pbuf_test[50];
 
-
-
-
 int main (void)
 {
 	 //Initialize clock and board definitions.
@@ -54,7 +51,6 @@ int main (void)
 	//* Configure and start the Timer. (Look in the “timer interface” functions.)
 	configure_tc();
 	
-	 
 	//* Configure the WiFi USART and SPI, as well as the “command complete” and “provision”
 	//pins (interrupts).
 	NVIC_DisableIRQ(SPI_IRQn);
@@ -62,32 +58,27 @@ int main (void)
 	NVIC_SetPriority(SPI_IRQn, 0);
 	NVIC_EnableIRQ(SPI_IRQn);
 	
-	spi_peripheral_initialize();
+	configure_usart();
+	configure_spi();
+	configure_wifi_comm_pin();
+	configure_wifi_provision_pin();
 	 
 	 //* Configure the indicators and the “command complete”, ”network”, and ”clients” GPIOs
 	 //through the UART interface of the ESP32 (detailed in Section 2).
 	 
 	 
 	 //* Initialize and configure the camera.
-	 
+	 init_camera();
+	 configure_camera();
 	 
 	 //* Reset the WiFi and wait for it to connect to a network. While waiting, make sure to listen
-	 //for the “provision” pin.
-	 
+	 //for the “provision” pin.	 
 	 
 	 //* Send “test” to the WiFi module and wait for a response of “SUCCESS”. If you do not receive
-	 //it, wait 10 seconds, reset the WiF module, and try again.
+	 //it, wait 10 seconds, reset the WiFi module, and try again.
 	 
-	 sprintf(pbuf_test, 0x746573740a); //this says "text", converted to hex
-
 	// Thomas' Main Code Loop Code
-
-	configure_usart();
-	configure_wifi_comm_pin();
-	configure_wifi_provision_pin();
-
-	configure_spi();
-
+	
 	//init_camera();
 
 	ioport_set_pin_dir(LED_PIN,IOPORT_DIR_OUTPUT);

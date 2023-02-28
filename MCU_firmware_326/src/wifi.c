@@ -6,6 +6,7 @@
  */ 
 
 #include "wifi.h"
+#include "camera.h"
 #include "helpers/ov2640.h"
 #include "timer_interface.h"
 
@@ -236,9 +237,10 @@ void write_image_to_web(void){
 	 //Writes an image from the SAM4S8B to the ESP32. If the length of the image is zero 
 	 //(i.e. the image is not valid), return. Otherwise, follow this protocol
 	 //(illustrated in Appendix C):
+		uint8_t image_capture_success = start_capture();
 
 	 //Configure the SPI interface to be ready for a transfer by setting its parameters appropriately.
-	 //prepare_spi_transfer();
+	 prepare_spi_transfer();
 
 	 //Issue the command “image_transfer xxxx”, where xxxx is replaced by the length of the
 	 //image you want to transfer.
