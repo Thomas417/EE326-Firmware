@@ -100,17 +100,16 @@ void init_camera(void){
 	while (!(PMC->PMC_SCSR & PMC_SCSR_PCK0)) {
 	}
 	
+	pmc_enable_pllack(7, 0x1, 1); /* PLLA work at 96 Mhz */
+	
 	/* Turn on ov7740 image sensor using power pin */
 	ov_power(true, OV_POWER_PIO, OV_POWER_MASK);
 	
-	/* Init PCK0 to work at 24 Mhz */
-	/* 96/4=24 Mhz */
-	PMC->PMC_PCK[0] = (PMC_PCK_PRES_CLK_4 | PMC_PCK_CSS_PLLA_CLK);
-	PMC->PMC_SCER = PMC_SCER_PCK0;
-	while (!(PMC->PMC_SCSR & PMC_SCSR_PCK0)) {
-	}
-	
 	configure_twi();
+	
+	// RST Pin Management
+	ioport_set_pin_dir(OV7740_RST_MASK,IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(OV7740_RST_MASK,true);
 	
 }
 
@@ -175,9 +174,30 @@ uint8_t start_capture(void){
 	while (!g_ul_vsync_flag) {
 		//do nothing
 	}
-	g_ul_vsync_flag = false;
+	
+	/* Disable vsync interrupt*/
+	pio_disable_interrupt(OV7740_VSYNC_PIO, OV7740_VSYNC_MASK);
 
-	pio_capture_to_buffer(p_pio, p_uc_buf, ul_size);
+	/* Enable pio capture*/
+	pio_capture_enable(OV7740_DATA_BUS_PIO);
+
+	/* Capture data and send it to external SRAM memory thanks to PDC
+	 * feature */
+	pio_capture_to_buffer(OV7740_DATA_BUS_PIO, g_p_uc_cap_dest_buf,
+			(g_us_cap_line * g_us_cap_rows) >> 2);
+
+	/* Wait end of capture*/
+	while (!((OV7740_DATA_BUS_PIO->PIO_PCISR & PIO_PCIMR_RXBUFF) ==
+			PIO_PCIMR_RXBUFF)) {
+	}
+
+	/* Disable pio capture*/
+	pio_capture_disable(OV7740_DATA_BUS_PIO);
+
+	/* Reset vsync flag*/
+	g_ul_vsync_flag = false;
+	
+	/* Check Size  */
 	uint8_t len_success = find_image_len();
 	return (image_size > 0);
 	

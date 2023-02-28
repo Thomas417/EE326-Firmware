@@ -85,6 +85,10 @@
 #define OV_DATA_BUS_ATTR               PIO_DEFAULT
 
 
+// RST Pin (this is only driven high)
+#define OV7740_RST_MASK					PIO_PA20_IDX
+
+
 //DEFINE camera TWI parameters here
 
 //DECLARE camera variables here

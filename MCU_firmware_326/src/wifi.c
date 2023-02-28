@@ -131,7 +131,7 @@ void write_wifi_command(char* comm, uint8_t cnt) //TODO: Implement timeout mecha
 	//ioport_set_pin_level(LED_PIN,true);
 	counts = 0;
 	// Wait time = cnt seconds
-	while (counts < cnt && command_flag==false)	{
+	while (counts < cnt && command_flag==true)	{
 	}
 	//ioport_set_pin_level(LED_PIN,false);
 	command_flag = false;
