@@ -14,15 +14,15 @@
 //ul_id = , 
 //ul_mask = ;
 
-static uint32_t gs_ul_spi_clock = 500000; /* SPI clock setting (Hz). */
-static uint32_t gs_ul_spi_cmd = RC_SYN; /* Current SPI return code. */
-static uint32_t gs_ul_spi_state = 0; /* Current SPI state. */
-
-/* 64 bytes data buffer for SPI transfer and receive. */
-static uint8_t *gs_puc_transfer_buffer; /* Pointer to transfer buffer. */
-static uint32_t gs_ul_transfer_index; /* Transfer buffer index. */
-static uint32_t gs_ul_transfer_length; /* Transfer buffer length. */
-static struct status_block_t gs_spi_status; /* SPI Status. */
+//static uint32_t gs_ul_spi_clock = 500000; /* SPI clock setting (Hz). */
+//static uint32_t gs_ul_spi_cmd = RC_SYN; /* Current SPI return code. */
+//static uint32_t gs_ul_spi_state = 0; /* Current SPI state. */
+//
+///* 64 bytes data buffer for SPI transfer and receive. */
+//static uint8_t *gs_puc_transfer_buffer; /* Pointer to transfer buffer. */
+//static uint32_t gs_ul_transfer_index; /* Transfer buffer index. */
+//static uint32_t gs_ul_transfer_length; /* Transfer buffer length. */
+//static struct status_block_t gs_spi_status; /* SPI Status. */
 
 // UART Communication and Control Line Variables
 volatile uint32_t received_byte_wifi = 0;
@@ -34,7 +34,7 @@ volatile bool command_flag = false;
 
 //----------------TODO: USART functions----------------//
 
-void USART0_Handler(void)
+void wifi_usart_handler(void)
 {
 	uint32_t ul_status;
 
@@ -198,34 +198,34 @@ void wifi_spi_handler(void){
 
 void configure_spi(void){
 	//Configuration of SPI port used to send images to the ESP32.
-	spi_enable_clock(SPI_SLAVE_BASE);
-	spi_disable(SPI_SLAVE_BASE);
-	spi_set_clock_polarity(SPI_SLAVE_BASE, SPI_CHIP_SEL, SPI_CLK_POLARITY);
-	spi_set_clock_phase(SPI_SLAVE_BASE, SPI_CHIP_SEL, SPI_CLK_PHASE);
-	spi_set_bits_per_transfer(SPI_SLAVE_BASE, SPI_CHIP_SEL, SPI_CSR_BITS_8_BIT);
-	
-	spi_peripheral_initialize();
-	spi_enable(SPI_SLAVE_BASE);
-	
-	/* Start waiting command. */
-	prepare_spi_transfer();
+	//spi_enable_clock(SPI_SLAVE_BASE);
+	//spi_disable(SPI_SLAVE_BASE);
+	//spi_set_clock_polarity(SPI_SLAVE_BASE, SPI_CHIP_SEL, SPI_CLK_POLARITY);
+	//spi_set_clock_phase(SPI_SLAVE_BASE, SPI_CHIP_SEL, SPI_CLK_PHASE);
+	//spi_set_bits_per_transfer(SPI_SLAVE_BASE, SPI_CHIP_SEL, SPI_CSR_BITS_8_BIT);
+	//
+	//spi_peripheral_initialize();
+	//spi_enable(SPI_SLAVE_BASE);
+	//
+	///* Start waiting command. */
+	//prepare_spi_transfer();
 }
 
 void spi_peripheral_initialize(void){
-	//Initialize the SPI port as a peripheral (slave) device.
-	spi_reset(SPI_SLAVE_BASE);
-	spi_set_slave_mode(SPI_SLAVE_BASE);
-	spi_disable_mode_fault_detect(SPI_SLAVE_BASE);
-	spi_set_peripheral_chip_select_value(SPI_SLAVE_BASE, SPI_CHIP_PCS);
-	spi_enable_interrupt(SPI_SLAVE_BASE, SPI_IER_RDRF);	
+	////Initialize the SPI port as a peripheral (slave) device.
+	//spi_reset(SPI_SLAVE_BASE);
+	//spi_set_slave_mode(SPI_SLAVE_BASE);
+	//spi_disable_mode_fault_detect(SPI_SLAVE_BASE);
+	//spi_set_peripheral_chip_select_value(SPI_SLAVE_BASE, SPI_CHIP_PCS);
+	//spi_enable_interrupt(SPI_SLAVE_BASE, SPI_IER_RDRF);	
 }
 
 void prepare_spi_transfer(void){
-	//Set necessary parameters to prepare for SPI transfer.
-	gs_ul_transfer_length = MAX_LENGTH;
-	gs_ul_transfer_index = 0;
-	//spi_write(SPI_SLAVE_BASE, gs_puc_transfer_buffer[gs_ul_transfer_index], 0,
-	//0);
+	////Set necessary parameters to prepare for SPI transfer.
+	//gs_ul_transfer_length = MAX_LENGTH;
+	//gs_ul_transfer_index = 0;
+	////spi_write(SPI_SLAVE_BASE, gs_puc_transfer_buffer[gs_ul_transfer_index], 0,
+	////0);
 }
 
 /* Sean's Code */

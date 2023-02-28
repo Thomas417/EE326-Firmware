@@ -16,7 +16,7 @@
 #define WIFI_ID_USART				ID_USART0
 #define WIFI_USART					USART0
 #define WIFI_USART_BAUDRATE		115200
-#define USART_Handler				USART0_Handler
+#define USART_Handler				wifi_usart_handler
 #define USART_IRQn					USART0_IRQn
 
 #define ALL_INTERRUPT_MASK  0xffffffff
@@ -92,44 +92,44 @@
 
 
 
-
-//DEFINE WiFi SPI parameters + pin definitions here
-
-//Wifi buffer config		From Ilya In-Class Example: Wifi input buffer configuration
-//volatile uint8_t USART_INPUT_MAX_LEN = 1000;
-#define MAX_LENGTH 1000 //image length for buffer
-
-#define SPI_CHIP_SEL 0 /* Chip select. */
-#define SPI_CHIP_PCS spi_get_pcs(SPI_CHIP_SEL)
-#define SPI_CLK_POLARITY 0 /* Clock polarity. */
-#define SPI_CLK_PHASE 0 /* Clock phase. */
-#define SPI_DLYBS 0x40 /* Delay before SPCK. */
-#define SPI_DLYBCT 0x10 /* Delay between consecutive transfers. */
-
-/* SPI slave states for this example. */
-#define SLAVE_STATE_IDLE           0
-#define SLAVE_STATE_TEST           1
-#define SLAVE_STATE_DATA           2
-#define SLAVE_STATE_STATUS_ENTRY   3
-#define SLAVE_STATE_STATUS         4
-#define SLAVE_STATE_END            5
-
-/* SPI example commands for this example. */
-#define CMD_TEST     0x10101010 /* slave test state, begin to return RC_RDY. */
-#define CMD_DATA     0x29380000 /* Slave data state, begin to return last data block. */
-#define CMD_STATUS   0x68390384 /* Slave status state, begin to return RC_RDY + RC_STATUS. */
-#define CMD_END      0x68390484 /* Slave idle state, begin to return RC_SYN. */
-#define RC_SYN       0x55AA55AA /* General return value. */
-#define RC_RDY       0x12345678 /* Ready status. */
-
-#define CMD_DATA_MSK 0xFFFF0000 /* Slave data mask. */
-#define DATA_BLOCK_MSK 0x0000FFFF /* Slave data block mask. */
-#define NB_STATUS_CMD   20 /* Number of commands logged in status. */
-#define NUM_SPCK_CONFIGURATIONS 4 /* Number of SPI clock configurations. */
-#define COMM_BUFFER_SIZE   64 /* SPI Communicate buffer size. */
-#define UART_BAUDRATE      115200 /* UART baudrate. */
-#define MAX_DATA_BLOCK_NUMBER  4 /* Data block number. */
-#define MAX_RETRY    4 /* Max retry times. */
+//
+////DEFINE WiFi SPI parameters + pin definitions here
+//
+////Wifi buffer config		From Ilya In-Class Example: Wifi input buffer configuration
+////volatile uint8_t USART_INPUT_MAX_LEN = 1000;
+//#define MAX_LENGTH 1000 //image length for buffer
+//
+//#define SPI_CHIP_SEL 0 /* Chip select. */
+//#define SPI_CHIP_PCS spi_get_pcs(SPI_CHIP_SEL)
+//#define SPI_CLK_POLARITY 0 /* Clock polarity. */
+//#define SPI_CLK_PHASE 0 /* Clock phase. */
+//#define SPI_DLYBS 0x40 /* Delay before SPCK. */
+//#define SPI_DLYBCT 0x10 /* Delay between consecutive transfers. */
+//
+///* SPI slave states for this example. */
+//#define SLAVE_STATE_IDLE           0
+//#define SLAVE_STATE_TEST           1
+//#define SLAVE_STATE_DATA           2
+//#define SLAVE_STATE_STATUS_ENTRY   3
+//#define SLAVE_STATE_STATUS         4
+//#define SLAVE_STATE_END            5
+//
+///* SPI example commands for this example. */
+//#define CMD_TEST     0x10101010 /* slave test state, begin to return RC_RDY. */
+//#define CMD_DATA     0x29380000 /* Slave data state, begin to return last data block. */
+//#define CMD_STATUS   0x68390384 /* Slave status state, begin to return RC_RDY + RC_STATUS. */
+//#define CMD_END      0x68390484 /* Slave idle state, begin to return RC_SYN. */
+//#define RC_SYN       0x55AA55AA /* General return value. */
+//#define RC_RDY       0x12345678 /* Ready status. */
+//
+//#define CMD_DATA_MSK 0xFFFF0000 /* Slave data mask. */
+//#define DATA_BLOCK_MSK 0x0000FFFF /* Slave data block mask. */
+//#define NB_STATUS_CMD   20 /* Number of commands logged in status. */
+//#define NUM_SPCK_CONFIGURATIONS 4 /* Number of SPI clock configurations. */
+//#define COMM_BUFFER_SIZE   64 /* SPI Communicate buffer size. */
+//#define UART_BAUDRATE      115200 /* UART baudrate. */
+//#define MAX_DATA_BLOCK_NUMBER  4 /* Data block number. */
+//#define MAX_RETRY    4 /* Max retry times. */
 
 //DECLARE WiFi variables here
 uint8_t in_byte;
@@ -137,28 +137,28 @@ uint32_t ul_id, ul_mask;
 char* comm;
 uint8_t cnt;
 
-/* Status block. */
-struct status_block_t {
-	uint32_t ul_total_block_number; 	/** Number of data blocks. */
-	uint32_t ul_total_command_number;	/** Number of SPI commands (including data blocks). */
-	uint32_t ul_cmd_list[NB_STATUS_CMD]; 	/** Command list. */
-};
-
-/* SPI clock configuration. */
-static const uint32_t gs_ul_clock_configurations[] =
-{ 500000, 1000000, 2000000, 5000000 };
+///* Status block. */
+//struct status_block_t {
+	//uint32_t ul_total_block_number; 	/** Number of data blocks. */
+	//uint32_t ul_total_command_number;	/** Number of SPI commands (including data blocks). */
+	//uint32_t ul_cmd_list[NB_STATUS_CMD]; 	/** Command list. */
+//};
+//
+///* SPI clock configuration. */
+//static const uint32_t gs_ul_clock_configurations[] =
+//{ 500000, 1000000, 2000000, 5000000 };
 	
-static uint32_t gs_ul_spi_clock; /* SPI clock setting (Hz). */
-static uint32_t gs_ul_spi_cmd; /* Current SPI return code. */
-static uint32_t gs_ul_spi_state; /* Current SPI state. */
-
-/* 64 bytes data buffer for SPI transfer and receive. */
-//static uint8_t gs_uc_spi_buffer[COMM_BUFFER_SIZE]; /* Transfer buffer. */
-static uint8_t *gs_puc_transfer_buffer; /* Pointer to transfer buffer. */
-static uint32_t gs_ul_transfer_index; /* Transfer buffer index. */
-static uint32_t gs_ul_transfer_length; /* Transfer buffer length. */
-static struct status_block_t gs_spi_status; /* SPI Status. */
-static uint32_t gs_ul_test_block_number;
+//static uint32_t gs_ul_spi_clock; /* SPI clock setting (Hz). */
+//static uint32_t gs_ul_spi_cmd; /* Current SPI return code. */
+//static uint32_t gs_ul_spi_state; /* Current SPI state. */
+//
+///* 64 bytes data buffer for SPI transfer and receive. */
+////static uint8_t gs_uc_spi_buffer[COMM_BUFFER_SIZE]; /* Transfer buffer. */
+//static uint8_t *gs_puc_transfer_buffer; /* Pointer to transfer buffer. */
+//static uint32_t gs_ul_transfer_index; /* Transfer buffer index. */
+//static uint32_t gs_ul_transfer_length; /* Transfer buffer length. */
+//static struct status_block_t gs_spi_status; /* SPI Status. */
+//static uint32_t gs_ul_test_block_number;
 
 // Interrupt and Control Line Variable Initialization
 volatile bool reading_wifi_flag; // Flag for test/success confirmation

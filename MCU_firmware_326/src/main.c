@@ -57,12 +57,12 @@ int main (void)
 	 
 	//* Configure the WiFi USART and SPI, as well as the “command complete” and “provision”
 	//pins (interrupts).
-	NVIC_DisableIRQ(SPI_IRQn);
-	NVIC_ClearPendingIRQ(SPI_IRQn);
-	NVIC_SetPriority(SPI_IRQn, 0);
-	NVIC_EnableIRQ(SPI_IRQn);
+	//NVIC_DisableIRQ(SPI_IRQn);
+	//NVIC_ClearPendingIRQ(SPI_IRQn);
+	//NVIC_SetPriority(SPI_IRQn, 0);
+	//NVIC_EnableIRQ(SPI_IRQn);
 	
-	spi_peripheral_initialize();
+	//spi_peripheral_initialize();
 	 
 	 //* Configure the indicators and the “command complete”, ”network”, and ”clients” GPIOs
 	 //through the UART interface of the ESP32 (detailed in Section 2).
@@ -78,7 +78,7 @@ int main (void)
 	 //* Send “test” to the WiFi module and wait for a response of “SUCCESS”. If you do not receive
 	 //it, wait 10 seconds, reset the WiF module, and try again.
 	 
-	 sprintf(pbuf_test, 0x746573740a); //this says "text", converted to hex
+	 //sprintf(pbuf_test, 0x746573740a); //this says "text", converted to hex
 
 	// Thomas' Main Code Loop Code
 
@@ -86,7 +86,7 @@ int main (void)
 	configure_wifi_comm_pin();
 	configure_wifi_provision_pin();
 
-	configure_spi();
+	//configure_spi();
 
 	//init_camera();
 
@@ -147,9 +147,9 @@ int main (void)
 		if (provisioning_flag) {
 			write_wifi_command("provision",1);
 			provisioning_flag = false;
-			//ioport_set_pin_level(LED_PIN2,false);
-			//delay_s(1);
-			//ioport_set_pin_level(LED_PIN2,true);
+			ioport_set_pin_level(LED_PIN2,false);
+			delay_s(1);
+			ioport_set_pin_level(LED_PIN2,true);
 		}
 	}
 
@@ -160,8 +160,8 @@ int main (void)
 		ioport_set_pin_level(WIFI_RESET_MASK,true);
 		delay_ms(500);
 	
-		ioport_set_pin_level(LED_PIN,true);
-		delay_ms(500);
+		//ioport_set_pin_level(LED_PIN,true);
+		//delay_ms(500);
 		//ioport_set_pin_level(LED_PIN,false);
 	
 		// Send UART Test command and wait 10 seconds
@@ -178,9 +178,9 @@ int main (void)
 		ioport_set_pin_level(LED_PIN2,true);
 		if (provisioning_flag) {
 			write_wifi_command("provision",1);
-			ioport_set_pin_level(LED_PIN,true);
-			delay_s(2);
-			ioport_set_pin_level(LED_PIN,false);
+			//ioport_set_pin_level(LED_PIN,true);
+			//delay_s(2);
+			//ioport_set_pin_level(LED_PIN,false);
 			provisioning_flag = false;
 		}
 	
