@@ -113,12 +113,17 @@
 #define BOARD_TWI_IRQn		             TWI0_IRQn
 
 #define CONF_BOARD_TWI0 /** Configure TWI0 pins (for OV7740  communications). */
-#define CONF_BOARD_PCK0 /** Configure PCK0 pins (for OV7740  communications). */
+#define CONF_BOARD_PCK1 /** Configure PCK1 pins (for OV7740  communications). */
 
 /* TWI board defines. */
 #define ID_BOARD_TWI                   ID_TWI0
 #define BOARD_TWI                      TWI0
 #define BOARD_TWI_IRQn                 TWI0_IRQn
+
+
+/** PCK1 */
+#define PIN_PCK1                       (PIO_PA17_IDX)
+#define PIN_PCK1_FLAGS                 (PIO_PERIPH_A | PIO_DEFAULT)
 
 
 

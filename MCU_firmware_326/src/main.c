@@ -34,7 +34,7 @@
 
 //user-defined files
 #include "wifi.h"
-//#include "camera.h"
+#include "camera.h"
 #include "helpers/ov2640.h"
 #include "timer_interface.h"
 
@@ -61,8 +61,8 @@ int main (void)
 	 
 	 
 	 //* Initialize and configure the camera.
-	 //init_camera();
-	 //configure_camera();
+	 init_camera();
+	 configure_camera();
 	 
 	 //* Reset the WiFi and wait for it to connect to a network. While waiting, make sure to listen
 	 //for the �provision� pin.	 
@@ -71,8 +71,6 @@ int main (void)
 	 //it, wait 10 seconds, reset the WiFi module, and try again.
 	 
 	// Thomas' Main Code Loop Code
-	
-	//init_camera();
 
 	ioport_set_pin_dir(LED_PIN,IOPORT_DIR_OUTPUT);
 	ioport_set_pin_level(LED_PIN,false);
@@ -130,75 +128,94 @@ int main (void)
 	/* Insert application code here, after the board has been initialized. */
 
 
-	// Loop while waiting for Network connection confirmation
-	while (!ioport_get_pin_level(WIFI_NET_MASK))	{
-		ioport_set_pin_level(LED_PIN,true);
-		delay_ms(500);
-		// Check if WIFI_SETUP_BUTTON was pressed and send provision command if so
-		if (provisioning_flag) {
-			ioport_set_pin_level(LED_PIN2,true);
-			delay_ms(500);
-			write_wifi_command("provision",1);
-			provisioning_flag = false;
-			ioport_set_pin_level(LED_PIN2,false);
-			delay_ms(500);
-		}
-		ioport_set_pin_level(LED_PIN,false);
-		delay_ms(500);
+
+
+
+
+
+	// Test Loop, REMOVE BEFORE TESTING NONCAMERA FUNCTIONS
+	while (1) {
+		start_capture();
 	}
 
 
-	//ioport_set_pin_level(LED_PIN,true);
-	while (!reading_wifi_flag)	{
-		
-		// Reset wifi chip
-		ioport_set_pin_level(WIFI_RESET_MASK,false);
-		delay_ms(500);
-		ioport_set_pin_level(WIFI_RESET_MASK,true);
-		delay_ms(1000);
-	
-		ioport_set_pin_level(LED_PIN,true);
-		delay_ms(1000);
-		ioport_set_pin_level(LED_PIN,false);
-		delay_ms(1000);
-	
-		// Send UART Test command and wait 10 seconds
-		write_wifi_command("test",10);
-		delay_ms(3000);
-	
-	}
 
-	// Start Main Loop
-	while (1)	{
-		// Check if WIFI_SETUP_BUTTON was pressed and send provision command if so
+
+
+
+
+
+
+	//// Loop while waiting for Network connection confirmation
+	//while (!ioport_get_pin_level(WIFI_NET_MASK))	{
+		//ioport_set_pin_level(LED_PIN,true);
+		//delay_ms(500);
+		//// Check if WIFI_SETUP_BUTTON was pressed and send provision command if so
+		//if (provisioning_flag) {
+			//ioport_set_pin_level(LED_PIN2,true);
+			//delay_ms(500);
+			//write_wifi_command("provision",1);
+			//provisioning_flag = false;
+			//ioport_set_pin_level(LED_PIN2,false);
+			//delay_ms(500);
+		//}
 		//ioport_set_pin_level(LED_PIN,false);
-		ioport_set_pin_level(LED_PIN,true);
-		delay_ms(500);
-		ioport_set_pin_level(LED_PIN,false);
-		delay_ms(500);
-		if (provisioning_flag) {
-			write_wifi_command("provision",1);
-			ioport_set_pin_level(LED_PIN2,true);
-			delay_s(5);
-			ioport_set_pin_level(LED_PIN2,false);
-
-			provisioning_flag = false;
-		}
-	
-		if (ioport_get_pin_level(WIFI_NET_MASK) && ioport_get_pin_level(WIFI_CLIENT_PIN_MASK))	{
-			// Send image command
-			//write_image_to_web();
-			ioport_set_pin_level(LED_PIN2,true);
-			ioport_set_pin_level(LED_PIN,true);
-			delay_ms(1000);
-			ioport_set_pin_level(LED_PIN2,false);
-			ioport_set_pin_level(LED_PIN,false);
-			delay_ms(1000);
-			
-			write_image_to_web();
-		}
-	
-	}
+		//delay_ms(500);
+	//}
+//
+//
+	////ioport_set_pin_level(LED_PIN,true);
+	//while (!reading_wifi_flag)	{
+		//
+		//// Reset wifi chip
+		//ioport_set_pin_level(WIFI_RESET_MASK,false);
+		//delay_ms(500);
+		//ioport_set_pin_level(WIFI_RESET_MASK,true);
+		//delay_ms(1000);
+	//
+		//ioport_set_pin_level(LED_PIN,true);
+		//delay_ms(1000);
+		//ioport_set_pin_level(LED_PIN,false);
+		//delay_ms(1000);
+	//
+		//// Send UART Test command and wait 10 seconds
+		//write_wifi_command("test",10);
+		//delay_ms(3000);
+	//
+	//}
+//
+	//// Start Main Loop
+	//while (1)	{
+		//// Check if WIFI_SETUP_BUTTON was pressed and send provision command if so
+		////ioport_set_pin_level(LED_PIN,false);
+		//ioport_set_pin_level(LED_PIN,true);
+		//delay_ms(500);
+		//ioport_set_pin_level(LED_PIN,false);
+		//delay_ms(500);
+		//if (provisioning_flag) {
+			//write_wifi_command("provision",1);
+			//ioport_set_pin_level(LED_PIN2,true);
+			//delay_s(5);
+			//ioport_set_pin_level(LED_PIN2,false);
+//
+			//provisioning_flag = false;
+		//}
+	//
+		//if (ioport_get_pin_level(WIFI_NET_MASK) && ioport_get_pin_level(WIFI_CLIENT_PIN_MASK))	{
+			//// Send image command
+			////write_image_to_web();
+			//ioport_set_pin_level(LED_PIN2,true);
+			//ioport_set_pin_level(LED_PIN,true);
+			//delay_ms(1000);
+			//ioport_set_pin_level(LED_PIN2,false);
+			//ioport_set_pin_level(LED_PIN,false);
+			//delay_ms(1000);
+			//
+			//start_capture();
+			//delay_s(1);
+			////write_image_to_web();
+		//}
+	//}
 	
 }
 

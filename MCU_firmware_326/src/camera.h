@@ -13,8 +13,8 @@
 
 /* Image sensor board defines. */
 // Image sensor Power pin.
-#define OV_POWER_PIO                   OV_SW_OVT_PIO
-#define OV_POWER_MASK                  OV_SW_OVT_MASK
+//#define OV_POWER_PIO                   OV_SW_OVT_PIO
+//#define OV_POWER_MASK                  OV_SW_OVT_MASK
 // Image sensor VSYNC pin.
 #define OV7740_VSYNC_PIO			   OV_VSYNC_PIO
 #define OV7740_VSYNC_ID				   OV_VSYNC_ID
@@ -36,20 +36,20 @@
 //#define OV_SW_OVT_TYPE                 PIO_OUTPUT_1
 
 /** OV_RST pin definition */
-#define OV_RST_GPIO                    PIO_PC15_IDX
-#define OV_RST_FLAGS                   (PIO_OUTPUT_1 | PIO_DEFAULT)
-#define OV_RST_MASK                    PIO_PC15
-#define OV_RST_PIO                     PIOC
-#define OV_RST_ID                      ID_PIOC
-#define OV_RST_TYPE                    PIO_OUTPUT_1
+//#define OV_RST_GPIO                    PIO_PC15_IDX
+//#define OV_RST_FLAGS                   (PIO_OUTPUT_1 | PIO_DEFAULT)
+//#define OV_RST_MASK                    PIO_PC15
+//#define OV_RST_PIO                     PIOC
+//#define OV_RST_ID                      ID_PIOC
+//#define OV_RST_TYPE                    PIO_OUTPUT_1
 
 /** OV_FSIN definition */
-#define OV_FSIN_GPIO                   PIO_PA21_IDX
-#define OV_FSIN_FLAGS                  (PIO_OUTPUT_0 | PIO_DEFAULT)
-#define OV_FSIN_MASK                   PIO_PA21
-#define OV_FSIN_PIO                    PIOA
-#define OV_FSIN_ID                     ID_PIOA
-#define OV_FSIN_TYPE                   PIO_OUTPUT_0
+//#define OV_FSIN_GPIO                   PIO_PA21_IDX
+//#define OV_FSIN_FLAGS                  (PIO_OUTPUT_0 | PIO_DEFAULT)
+//#define OV_FSIN_MASK                   PIO_PA21
+//#define OV_FSIN_PIO                    PIOA
+//#define OV_FSIN_ID                     ID_PIOA
+//#define OV_FSIN_TYPE                   PIO_OUTPUT_0
 
 /** OV_HSYNC pin definition */
 #define OV_HSYNC_GPIO                  PIO_PA16_IDX
@@ -84,8 +84,10 @@
 #define OV_DATA_BUS_ATTR               PIO_DEFAULT
 
 
+
+
 // RST Pin (this is only driven high)
-#define OV7740_RST_MASK					PIO_PA20_IDX
+#define OV2640_RST_MASK					PIO_PA20_IDX
 
 
 //DEFINE camera TWI parameters here

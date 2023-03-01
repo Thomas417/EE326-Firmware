@@ -393,8 +393,11 @@ uint32_t ov_init(Twi* const p_twi)
 	ul_id = ov_id( p_twi );
 
 	if (((ul_id >> 8)&0xff)  == OV2640_PIDH_DEFAULT) {
+		
 		if (ov_manufacturer( p_twi ) == 0) {
+			
 			if (ov_test_write( p_twi ) == 0) {
+				
 				return 0;
 			}
 		}

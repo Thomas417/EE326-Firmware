@@ -14,7 +14,8 @@
 #define IMAGE_HEIGHT                   (240UL)
 
 #define TWI_CLK     (400000UL) /* TWI clock frequency in Hz (400KHz) */
-uint8_t *g_p_uc_cap_dest_buf; /* Pointer to the image data destination buffer */ //ILYA: Should this be a buffer instead of a pointer?
+//uint8_t *g_p_uc_cap_dest_buf; /* Pointer to the image data destination buffer */ //ILYA: Should this be a buffer instead of a pointer?
+uint8_t g_p_uc_cap_dest_buf[100000];
 uint16_t g_us_cap_rows = IMAGE_HEIGHT; /* Rows size of capturing picture */
 //ul_size = 100000000; 
 
@@ -56,6 +57,23 @@ void init_vsync_interrupts(void){
 void configure_twi(void){
 	//Configuration of TWI (two wire interface)
 	twi_options_t opt;
+	
+	// TWI Pin config
+	gpio_configure_pin(TWI0_DATA_GPIO, TWI0_DATA_FLAGS);
+	gpio_configure_pin(TWI0_CLK_GPIO, TWI0_CLK_FLAGS);
+	
+	// Data Bus and Camera Utility Pin config
+	//gpio_configure_pin(OV2640_RST_MASK, OV2640_RST_MASK);
+	gpio_configure_pin(OV_HSYNC_GPIO, OV_HSYNC_FLAGS);
+	gpio_configure_pin(OV_VSYNC_GPIO, OV_VSYNC_FLAGS);
+	gpio_configure_pin(OV_DATA_BUS_D2, OV_DATA_BUS_FLAGS);
+	gpio_configure_pin(OV_DATA_BUS_D3, OV_DATA_BUS_FLAGS);
+	gpio_configure_pin(OV_DATA_BUS_D4, OV_DATA_BUS_FLAGS);
+	gpio_configure_pin(OV_DATA_BUS_D5, OV_DATA_BUS_FLAGS);
+	gpio_configure_pin(OV_DATA_BUS_D6, OV_DATA_BUS_FLAGS);
+	gpio_configure_pin(OV_DATA_BUS_D7, OV_DATA_BUS_FLAGS);
+	gpio_configure_pin(OV_DATA_BUS_D8, OV_DATA_BUS_FLAGS);
+	gpio_configure_pin(OV_DATA_BUS_D9, OV_DATA_BUS_FLAGS);
 
 	/* Enable TWI peripheral */
 	pmc_enable_periph_clk(ID_BOARD_TWI);
@@ -88,9 +106,6 @@ void init_camera(void){
 	/* Init PIO capture*/
 	pio_capture_init(OV_DATA_BUS_PIO, OV_DATA_BUS_ID);
 
-	/* Turn on ov7740 image sensor using power pin */
-	ov_power(true, OV_POWER_PIO, OV_POWER_MASK);
-	
 	// Enable XCLCK
 	pmc_enable_pllbck(7, 0x1, 1); /* PLLA work at 96 Mhz */ // PA17 is xclck signal
 
@@ -101,16 +116,18 @@ void init_camera(void){
 	while (!(PMC->PMC_SCSR & PMC_SCSR_PCK1)) {
 	}
 	
-	configure_twi();
+	// Set XCLK Pin
+	gpio_configure_pin(PIN_PCK1, PIN_PCK1_FLAGS);
+
 	
 	// RST Pin Management
-	ioport_set_pin_dir(OV7740_RST_MASK,IOPORT_DIR_OUTPUT);
-	ioport_set_pin_level(OV7740_RST_MASK,true);
+	ioport_set_pin_dir(OV2640_RST_MASK,IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(OV2640_RST_MASK,true);
 	
 	
-	// Initialize camera and wait to let it adjust
-	while (ov_init(BOARD_TWI) == 1) {
-	}
+	// Initialize camera and wait to let it adjust  // ASK ILYA
+	//while (ov_init(BOARD_TWI) == 1) {
+	//}
 	
 
 	
@@ -196,7 +213,7 @@ uint8_t start_capture(void){
 	/* Capture data and send it to external SRAM memory thanks to PDC
 	 * feature */
 	pio_capture_to_buffer(OV7740_DATA_BUS_PIO, g_p_uc_cap_dest_buf,
-			(g_us_cap_line * g_us_cap_rows) >> 2);
+			(100000) >> 2);
 
 	/* Wait end of capture*/
 	while (!((OV7740_DATA_BUS_PIO->PIO_PCISR & PIO_PCIMR_RXBUFF) ==
@@ -211,7 +228,7 @@ uint8_t start_capture(void){
 	
 	/* Check Size  */
 	uint8_t len_success = find_image_len();
-	return (image_size > 0); // I'm not sure if this function is supposed to return anything
+	return (image_size > 0);
 	
 }
 
