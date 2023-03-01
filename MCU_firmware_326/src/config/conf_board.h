@@ -25,58 +25,58 @@
 
 //
 //
-///******************************* SPI definition *********************************/
-///** SPI MISO pin. */
-//#define PIN_SPI_MISO                   {PIO_PA12A_MISO, PIOA, ID_PIOA,	\
-                                         //PIO_PERIPH_A, PIO_DEFAULT}
-//
-///** SPI MOSI pin. */
-//#define PIN_SPI_MOSI                   {PIO_PA13A_MOSI, PIOA, ID_PIOA,	\
-                                         //PIO_PERIPH_A, PIO_DEFAULT}
-//
-///** SPI SPCK pin. */
-//#define PIN_SPI_SPCK                   {PIO_PA14A_SPCK, PIOA, ID_PIOA,	\
-                                         //PIO_PERIPH_A, PIO_DEFAULT}
-//
-///** SPI chip select pin. */
-//#define PIN_SPI_NPCS0                  {PIO_PA11A_NPCS0, PIOA, ID_PIOA, \
-                                         //PIO_PERIPH_A, PIO_DEFAULT}
-//
-///** SPI MISO pin definition. */
-//#define SPI_MISO_GPIO                  (PIO_PA12_IDX)
-//#define SPI_MISO_FLAGS                 (PIO_PERIPH_A | PIO_DEFAULT)
-//#define SPI_MISO_MASK                  PIO_PA12
-//#define SPI_MISO_PIO                   PIOA
-//#define SPI_MISO_ID                    ID_PIOA
-//#define SPI_MISO_TYPE                  PIO_PERIPH_A
-//#define SPI_MISO_ATTR                  PIO_DEFAULT
-//
-///** SPI MOSI pin definition. */
-//#define SPI_MOSI_GPIO                  (PIO_PA13_IDX)
-//#define SPI_MOSI_FLAGS                 (PIO_PERIPH_A | PIO_DEFAULT)
-//#define SPI_MOSI_MASK                  PIO_PA13
-//#define SPI_MOSI_PIO                   PIOA
-//#define SPI_MOSI_ID                    ID_PIOA
-//#define SPI_MOSI_TYPE                  PIO_PERIPH_A
-//#define SPI_MOSI_ATTR                  PIO_DEFAULT
-//
-///** SPI SPCK pin definition. */
-//#define SPI_SPCK_GPIO                  (PIO_PA14_IDX)
-//#define SPI_SPCK_FLAGS                 (PIO_PERIPH_A | PIO_DEFAULT)
-//#define SPI_SPCK_MASK                  PIO_PA14
-//#define SPI_SPCK_PIO                   PIOA
-//#define SPI_SPCK_ID                    ID_PIOA
-//#define SPI_SPCK_TYPE                  PIO_PERIPH_A
-//#define SPI_SPCK_ATTR                  PIO_DEFAULT
-//
-///** SPI chip select 0 pin definition. */
-//#define SPI_NPCS0_GPIO                 (PIO_PA11_IDX)
-//#define SPI_NPCS0_FLAGS                (PIO_PERIPH_A | PIO_DEFAULT)
-//#define SPI_NPCS0_MASK                 PIO_PA11
-//#define SPI_NPCS0_PIO                  PIOA
-//#define SPI_NPCS0_ID                   ID_PIOA
-//#define SPI_NPCS0_TYPE                 PIO_PERIPH_A
-//#define SPI_NPCS0_ATTR                 PIO_DEFAULT
+/******************************* SPI definition *********************************/
+/** SPI MISO pin. */
+#define PIN_SPI_MISO                   {PIO_PA12A_MISO, PIOA, ID_PIOA,	\
+                                         PIO_PERIPH_A, PIO_DEFAULT}
+
+/** SPI MOSI pin. */
+#define PIN_SPI_MOSI                   {PIO_PA13A_MOSI, PIOA, ID_PIOA,	\
+                                         PIO_PERIPH_A, PIO_DEFAULT}
+
+/** SPI SPCK pin. */
+#define PIN_SPI_SPCK                   {PIO_PA14A_SPCK, PIOA, ID_PIOA,	\
+                                         PIO_PERIPH_A, PIO_DEFAULT}
+
+/** SPI chip select pin. */
+#define PIN_SPI_NPCS0                  {PIO_PA11A_NPCS0, PIOA, ID_PIOA, \
+                                         PIO_PERIPH_A, PIO_DEFAULT}
+
+/** SPI MISO pin definition. */
+#define SPI_MISO_GPIO                  (PIO_PA12_IDX)
+#define SPI_MISO_FLAGS                 (PIO_PERIPH_A | PIO_DEFAULT)
+#define SPI_MISO_MASK                  PIO_PA12
+#define SPI_MISO_PIO                   PIOA
+#define SPI_MISO_ID                    ID_PIOA
+#define SPI_MISO_TYPE                  PIO_PERIPH_A
+#define SPI_MISO_ATTR                  PIO_DEFAULT
+
+/** SPI MOSI pin definition. */
+#define SPI_MOSI_GPIO                  (PIO_PA13_IDX)
+#define SPI_MOSI_FLAGS                 (PIO_PERIPH_A | PIO_DEFAULT)
+#define SPI_MOSI_MASK                  PIO_PA13
+#define SPI_MOSI_PIO                   PIOA
+#define SPI_MOSI_ID                    ID_PIOA
+#define SPI_MOSI_TYPE                  PIO_PERIPH_A
+#define SPI_MOSI_ATTR                  PIO_DEFAULT
+
+/** SPI SPCK pin definition. */
+#define SPI_SPCK_GPIO                  (PIO_PA14_IDX)
+#define SPI_SPCK_FLAGS                 (PIO_PERIPH_A | PIO_DEFAULT)
+#define SPI_SPCK_MASK                  PIO_PA14
+#define SPI_SPCK_PIO                   PIOA
+#define SPI_SPCK_ID                    ID_PIOA
+#define SPI_SPCK_TYPE                  PIO_PERIPH_A
+#define SPI_SPCK_ATTR                  PIO_DEFAULT
+
+/** SPI chip select 0 pin definition. */
+#define SPI_NPCS0_GPIO                 (PIO_PA11_IDX)
+#define SPI_NPCS0_FLAGS                (PIO_PERIPH_A | PIO_DEFAULT)
+#define SPI_NPCS0_MASK                 PIO_PA11
+#define SPI_NPCS0_PIO                  PIOA
+#define SPI_NPCS0_ID                   ID_PIOA
+#define SPI_NPCS0_TYPE                 PIO_PERIPH_A
+#define SPI_NPCS0_ATTR                 PIO_DEFAULT
 //
 ///******************************* TWI definition*********************************/
 ///** TWI0 data pin */

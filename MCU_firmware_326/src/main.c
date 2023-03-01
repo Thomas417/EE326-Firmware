@@ -51,15 +51,8 @@ int main (void)
 	//* Configure and start the Timer. (Look in the �timer interface� functions.)
 	configure_tc();
 	
-	//* Configure the WiFi USART and SPI, as well as the �command complete� and �provision�
-	//pins (interrupts).
-	//NVIC_DisableIRQ(SPI_IRQn);
-	//NVIC_ClearPendingIRQ(SPI_IRQn);
-	//NVIC_SetPriority(SPI_IRQn, 0);
-	//NVIC_EnableIRQ(SPI_IRQn);
-	
 	configure_usart();
-	//configure_spi();
+	configure_spi();
 	configure_wifi_comm_pin();
 	configure_wifi_provision_pin();
 	 
@@ -106,6 +99,7 @@ int main (void)
 
 
 	// Set Control Line pins on ESP32
+	char* buff[100];
 	sprintf (buff, "set comm_gpio %d",ESP_COMM_GPIO);
 	delay_ms(10);
 	write_wifi_command(buff,2);
@@ -122,6 +116,10 @@ int main (void)
 	sprintf (buff, "set websocket_gpio %d", ESP_CLIENT_LED);
 	write_wifi_command(buff,2);
 	sprintf (buff, "set ap_gpio %d", ESP_PROV_LED);
+	write_wifi_command(buff,2);
+	
+	// Set SPI Baud Rate
+	sprintf(buff, "set spi_baud %d", SPI_BAUDRATE);
 	write_wifi_command(buff,2);
 
 	//write_wifi_command("test",10);
@@ -196,6 +194,8 @@ int main (void)
 			ioport_set_pin_level(LED_PIN2,false);
 			ioport_set_pin_level(LED_PIN,false);
 			delay_ms(1000);
+			
+			write_image_to_web();
 		}
 	
 	}

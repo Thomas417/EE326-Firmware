@@ -16,14 +16,14 @@
 //ul_mask = ;
 
 //static uint32_t gs_ul_spi_clock = 500000; /* SPI clock setting (Hz). */
-//static uint32_t gs_ul_spi_cmd = RC_SYN; /* Current SPI return code. */
-//static uint32_t gs_ul_spi_state = 0; /* Current SPI state. */
-//
-///* 64 bytes data buffer for SPI transfer and receive. */
-//static uint8_t *gs_puc_transfer_buffer; /* Pointer to transfer buffer. */
-//static uint32_t gs_ul_transfer_index; /* Transfer buffer index. */
-//static uint32_t gs_ul_transfer_length; /* Transfer buffer length. */
-//static struct status_block_t gs_spi_status; /* SPI Status. */
+static uint32_t gs_ul_spi_cmd = RC_SYN; /* Current SPI return code. */
+static uint32_t gs_ul_spi_state = 0; /* Current SPI state. */
+
+/* 64 bytes data buffer for SPI transfer and receive. */
+static uint8_t *gs_puc_transfer_buffer; /* Pointer to transfer buffer. */
+static uint32_t gs_ul_transfer_index; /* Transfer buffer index. */
+volatile uint32_t gs_ul_transfer_length; /* Transfer buffer length. */
+
 
 // UART Communication and Control Line Variables
 volatile uint32_t received_byte_wifi = 0;
@@ -178,58 +178,74 @@ void wifi_spi_handler(void){
 	//// Handler for peripheral mode interrupts on SPI bus. When the
 	//// ESP32 SPI controller requests data, this interrupt should 
 	//// send one byte of the image at a time.
-	//
-	//uint32_t new_cmd = 0;
-	//static uint16_t data;
-	//uint8_t uc_pcs;
-//
-	////if status register says "ready" and Receive Data Register Full
-	//if (spi_read_status(SPI_SLAVE_BASE) & SPI_SR_RDRF) {
-			//
-		//spi_read(SPI_SLAVE_BASE, &data, &uc_pcs);
-		//gs_puc_transfer_buffer[gs_ul_transfer_index] = data;
-		//gs_ul_transfer_index++;
-		//gs_ul_transfer_length--;
-			//
-		//if (gs_ul_transfer_length) {
-			//
-			////transfer one byte of image
-			//spi_write(SPI_SLAVE_BASE,
-			//gs_puc_transfer_buffer[gs_ul_transfer_index], 0, 0);
-		//}
-	//}
+	
+	uint32_t new_cmd = 0;
+	static uint16_t data;
+	uint8_t uc_pcs;
+
+	//if status register says "ready" and Receive Data Register Full
+	if (spi_read_status(SPI_SLAVE_BASE) & SPI_SR_RDRF) {
+			
+		spi_read(SPI_SLAVE_BASE, &data, &uc_pcs);
+		gs_puc_transfer_buffer[gs_ul_transfer_index] = data;
+		gs_ul_transfer_index++;
+		gs_ul_transfer_length--;
+			
+		if (gs_ul_transfer_length) {
+			
+			//transfer one byte of image
+			spi_write(SPI_SLAVE_BASE,
+			gs_puc_transfer_buffer[gs_ul_transfer_index], 0, 0);
+		}
+	}
 }
 
 void configure_spi(void){
+	
+	gpio_configure_pin(SPI_MISO_GPIO, SPI_MISO_FLAGS);
+	gpio_configure_pin(SPI_MOSI_GPIO, SPI_MOSI_FLAGS);
+	gpio_configure_pin(SPI_SPCK_GPIO, SPI_SPCK_FLAGS);
+	gpio_configure_pin(SPI_NPCS0_GPIO, SPI_NPCS0_FLAGS);
+	
+	/* Configure SPI interrupts for slave only. */
+	NVIC_DisableIRQ(SPI_IRQn);
+	NVIC_ClearPendingIRQ(SPI_IRQn);
+	NVIC_SetPriority(SPI_IRQn, 0);
+	NVIC_EnableIRQ(SPI_IRQn);
+	
 	//Configuration of SPI port used to send images to the ESP32.
-	//spi_enable_clock(SPI_SLAVE_BASE);
-	//spi_disable(SPI_SLAVE_BASE);
-	//spi_set_clock_polarity(SPI_SLAVE_BASE, SPI_CHIP_SEL, SPI_CLK_POLARITY);
-	//spi_set_clock_phase(SPI_SLAVE_BASE, SPI_CHIP_SEL, SPI_CLK_PHASE);
-	//spi_set_bits_per_transfer(SPI_SLAVE_BASE, SPI_CHIP_SEL, SPI_CSR_BITS_8_BIT);
-	//
-	//spi_peripheral_initialize();
-	//spi_enable(SPI_SLAVE_BASE);
-	//
-	///* Start waiting command. */
-	//prepare_spi_transfer();
+	spi_enable_clock(SPI_SLAVE_BASE);
+	spi_disable(SPI_SLAVE_BASE);
+	spi_set_clock_polarity(SPI_SLAVE_BASE, SPI_CHIP_SEL, SPI_CLK_POLARITY);
+	spi_set_clock_phase(SPI_SLAVE_BASE, SPI_CHIP_SEL, SPI_CLK_PHASE);
+	spi_set_bits_per_transfer(SPI_SLAVE_BASE, SPI_CHIP_SEL, SPI_CSR_BITS_8_BIT);
+	
+	spi_peripheral_initialize();
+	spi_enable(SPI_SLAVE_BASE);
+	
+	/* Start waiting command. */
+	prepare_spi_transfer();
 }
 
 void spi_peripheral_initialize(void){
-	////Initialize the SPI port as a peripheral (slave) device.
-	//spi_reset(SPI_SLAVE_BASE);
-	//spi_set_slave_mode(SPI_SLAVE_BASE);
-	//spi_disable_mode_fault_detect(SPI_SLAVE_BASE);
-	//spi_set_peripheral_chip_select_value(SPI_SLAVE_BASE, SPI_CHIP_PCS);
-	//spi_enable_interrupt(SPI_SLAVE_BASE, SPI_IER_RDRF);	
+	//Initialize the SPI port as a peripheral (slave) device.
+	spi_reset(SPI_SLAVE_BASE);
+	spi_set_slave_mode(SPI_SLAVE_BASE);
+	spi_disable_mode_fault_detect(SPI_SLAVE_BASE);
+	spi_set_peripheral_chip_select_value(SPI_SLAVE_BASE, SPI_CHIP_PCS);
+	spi_enable_interrupt(SPI_SLAVE_BASE, SPI_IER_RDRF);	
+	
 }
 
 void prepare_spi_transfer(void){
-	////Set necessary parameters to prepare for SPI transfer.
-	//gs_ul_transfer_length = MAX_LENGTH;
-	//gs_ul_transfer_index = 0;
-	////spi_write(SPI_SLAVE_BASE, gs_puc_transfer_buffer[gs_ul_transfer_index], 0,
-	////0);
+	//Set necessary parameters to prepare for SPI transfer.
+	gs_ul_transfer_length = MAX_LENGTH;
+	gs_ul_transfer_index = 0;
+	char* spi_test[1000];
+	sprintf(spi_test,"Test");
+	spi_write(SPI_SLAVE_BASE, spi_test[gs_ul_transfer_index], 0,0);
+	//sprintf(gs_puc_transfer_buffer,)
+	
 }
 
 /* Sean's Code */
@@ -240,15 +256,18 @@ void write_image_to_web(void){
 	 //Writes an image from the SAM4S8B to the ESP32. If the length of the image is zero 
 	 //(i.e. the image is not valid), return. Otherwise, follow this protocol
 	 //(illustrated in Appendix C):
-	if (image_size == 0) { return; }
+	
+	//if (image_size == 0) { return; }
 
 	 //Configure the SPI interface to be ready for a transfer by setting its parameters appropriately.
 	 prepare_spi_transfer();
 
 	 //Issue the command “image_transfer xxxx”, where xxxx is replaced by the length of the
 	 //image you want to transfer.
+	 image_size = 1000;
 	 sprintf(input_line_wifi, "image_transfer %d", image_size);
 	 write_wifi_command(input_line_wifi, 1);
+	 delay_ms(500);
 	 
 	 //The ESP32 will then set the “command complete” pin low and begin transferring the image
 	 //over SPI. //After the image is done sending, the ESP32 will set the “command complete” pin high. The
