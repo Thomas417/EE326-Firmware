@@ -128,12 +128,15 @@ void write_wifi_command(char* comm, uint8_t cnt) //TODO: Implement timeout mecha
 	char wifi_buff[100];
 	sprintf (wifi_buff, "%s\r\n", comm);
 	usart_write_line(WIFI_USART, wifi_buff);
+	
 	//ioport_set_pin_level(LED_PIN,true);
 	counts = 0;
 	// Wait time = cnt seconds
-	while (counts < cnt && command_flag==true)	{
+	ioport_set_pin_level(LED_PIN2,true);
+	while (counts < cnt && command_flag==false)	{
 	}
 	//ioport_set_pin_level(LED_PIN,false);
+	ioport_set_pin_level(LED_PIN2,false);
 	command_flag = false;
 }
 
@@ -172,29 +175,29 @@ void configure_wifi_provision_pin(void)
 
 
 void wifi_spi_handler(void){
-	// Handler for peripheral mode interrupts on SPI bus. When the
-	// ESP32 SPI controller requests data, this interrupt should 
-	// send one byte of the image at a time.
-	
-	uint32_t new_cmd = 0;
-	static uint16_t data;
-	uint8_t uc_pcs;
-
-	//if status register says "ready" and Receive Data Register Full
-	if (spi_read_status(SPI_SLAVE_BASE) & SPI_SR_RDRF) {
-			
-		spi_read(SPI_SLAVE_BASE, &data, &uc_pcs);
-		gs_puc_transfer_buffer[gs_ul_transfer_index] = data;
-		gs_ul_transfer_index++;
-		gs_ul_transfer_length--;
-			
-		if (gs_ul_transfer_length) {
-			
-			//transfer one byte of image
-			spi_write(SPI_SLAVE_BASE,
-			gs_puc_transfer_buffer[gs_ul_transfer_index], 0, 0);
-		}
-	}
+	//// Handler for peripheral mode interrupts on SPI bus. When the
+	//// ESP32 SPI controller requests data, this interrupt should 
+	//// send one byte of the image at a time.
+	//
+	//uint32_t new_cmd = 0;
+	//static uint16_t data;
+	//uint8_t uc_pcs;
+//
+	////if status register says "ready" and Receive Data Register Full
+	//if (spi_read_status(SPI_SLAVE_BASE) & SPI_SR_RDRF) {
+			//
+		//spi_read(SPI_SLAVE_BASE, &data, &uc_pcs);
+		//gs_puc_transfer_buffer[gs_ul_transfer_index] = data;
+		//gs_ul_transfer_index++;
+		//gs_ul_transfer_length--;
+			//
+		//if (gs_ul_transfer_length) {
+			//
+			////transfer one byte of image
+			//spi_write(SPI_SLAVE_BASE,
+			//gs_puc_transfer_buffer[gs_ul_transfer_index], 0, 0);
+		//}
+	//}
 }
 
 void configure_spi(void){

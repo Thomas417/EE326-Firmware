@@ -16,7 +16,7 @@
 #define WIFI_ID_USART				ID_USART0
 #define WIFI_USART					USART0
 #define WIFI_USART_BAUDRATE		115200
-#define USART_Handler				wifi_usart_handler
+#define wifi_usart_handler		USART0_Handler	
 #define USART_IRQn					USART0_IRQn
 
 #define ALL_INTERRUPT_MASK  0xffffffff
@@ -38,10 +38,10 @@
 #define WIFI_COMM_ATTR				PIO_IT_RISE_EDGE
 
 // Wifi NET Pin definitions
-#define WIFI_NET_PIN_NUM			PIO_PB12
+#define WIFI_NET_PIN_NUM			PIO_PB10
 #define WIFI_NET_PIO				PIOB
 #define WIFI_NET_ID					ID_PIOB
-#define WIFI_NET_MASK				PIO_PB12_IDX
+#define WIFI_NET_MASK				PIO_PB10_IDX
 //#define WIFI_NET_ATTR				PIO_IT_RISE_EDGE
 
 // CLIENT_PIN config
@@ -62,7 +62,7 @@
 #define WIFI_SETUP_BUTTON_ID            ID_PIOB
 #define WIFI_SETUP_BUTTON_PIO           PIOB
 #define WIFI_SETUP_BUTTON_NUM			PIO_PB14
-#define WIFI_SETUP_BUTTON_ATTR          (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
+#define WIFI_SETUP_BUTTON_ATTR          (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_FALL_EDGE)
 
 // Test LED Pins, for breadboard debugging
 #define LED_PIN		PIO_PA19_IDX
@@ -72,7 +72,7 @@
 
 // ESP32 GPIO pins (on the ESP32 NOT the MCU!)
 #define ESP_COMM_GPIO					22	// Control line to MCU (ON ESP32)
-#define ESP_NET_GPIO					23	// Control line to MCU (ON ESP32)
+#define ESP_NET_GPIO					21	// Control line to MCU (ON ESP32)
 #define ESP_CLIENT_GPIO					32	// Control line to MCU (ON ESP32)
 
 

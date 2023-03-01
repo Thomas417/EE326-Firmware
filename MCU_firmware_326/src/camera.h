@@ -14,11 +14,11 @@
 
 /* Image sensor board defines. */
 // Image sensor Power pin.
-#define OV_POWER_PIO                   OV_SW_OVT_PIO
-#define OV_POWER_MASK                  OV_SW_OVT_MASK
+//#define OV_POWER_PIO                   OV_SW_OVT_PIO
+//#define OV_POWER_MASK                  OV_SW_OVT_MASK
 // Image sensor VSYNC pin.
-#define OV7740_VSYNC_PIO	       OV_VSYNC_PIO
-#define OV7740_VSYNC_ID		       OV_VSYNC_ID
+#define OV7740_VSYNC_PIO			   OV_VSYNC_PIO
+#define OV7740_VSYNC_ID				   OV_VSYNC_ID
 #define OV7740_VSYNC_MASK              OV_VSYNC_MASK
 #define OV7740_VSYNC_TYPE              OV_VSYNC_TYPE
 // Image sensor data pin.
@@ -28,12 +28,12 @@
 
 // Board-level Pin Definitions
 /** OV_SW_OVT pin definition */
-#define OV_SW_OVT_GPIO                 PIO_PC10_IDX
-#define OV_SW_OVT_FLAGS                (PIO_OUTPUT_1 | PIO_DEFAULT)
-#define OV_SW_OVT_MASK                 PIO_PC10
-#define OV_SW_OVT_PIO                  PIOC
-#define OV_SW_OVT_ID                   ID_PIOC
-#define OV_SW_OVT_TYPE                 PIO_OUTPUT_1
+//#define OV_SW_OVT_GPIO                 PIO_PC10_IDX
+//#define OV_SW_OVT_FLAGS                (PIO_OUTPUT_1 | PIO_DEFAULT)
+//#define OV_SW_OVT_MASK                 PIO_PC10
+//#define OV_SW_OVT_PIO                  PIOC
+//#define OV_SW_OVT_ID                   ID_PIOC
+//#define OV_SW_OVT_TYPE                 PIO_OUTPUT_1
 
 /** OV_RST pin definition */
 #define OV_RST_GPIO                    PIO_PC15_IDX
