@@ -33,7 +33,7 @@
 #include "conf_clock.h"
 
 //user-defined files
-#include "wifi.h"
+//#include "wifi.h"
 #include "camera.h"
 #include "helpers/ov2640.h"
 #include "timer_interface.h"
@@ -49,7 +49,7 @@ int main (void)
 	board_init();
 	
 	//* Configure and start the Timer. (Look in the �timer interface� functions.)
-	configure_tc();
+	//configure_tc();
 	
 	//* Configure the WiFi USART and SPI, as well as the �command complete� and �provision�
 	//pins (interrupts).
@@ -58,10 +58,10 @@ int main (void)
 	//NVIC_SetPriority(SPI_IRQn, 0);
 	//NVIC_EnableIRQ(SPI_IRQn);
 	
-	configure_usart();
-	configure_spi();
-	configure_wifi_comm_pin();
-	configure_wifi_provision_pin();
+	//configure_usart();
+	//configure_spi();
+	//configure_wifi_comm_pin();
+	//configure_wifi_provision_pin();
 	 
 	 //* Configure the indicators and the �command complete�, �network�, and �clients� GPIOs
 	 //through the UART interface of the ESP32 (detailed in Section 2).
@@ -81,106 +81,114 @@ int main (void)
 	
 	//init_camera();
 
-	ioport_set_pin_dir(LED_PIN,IOPORT_DIR_OUTPUT);
-	ioport_set_pin_level(LED_PIN,false);
-	ioport_set_pin_dir(LED_PIN2,IOPORT_DIR_OUTPUT);
-	ioport_set_pin_level(LED_PIN2,false);
+	//ioport_set_pin_dir(LED_PIN,IOPORT_DIR_OUTPUT);
+	//ioport_set_pin_level(LED_PIN,false);
+	//ioport_set_pin_dir(LED_PIN2,IOPORT_DIR_OUTPUT);
+	//ioport_set_pin_level(LED_PIN2,false);
+//
+//
+	//// Control line pin ioport config
+	//ioport_set_pin_dir(WIFI_COMM_MASK,IOPORT_DIR_INPUT);
+	//ioport_set_pin_dir(WIFI_NET_MASK,IOPORT_DIR_INPUT);
+	//ioport_set_pin_dir(WIFI_CLIENT_PIN_MASK,IOPORT_DIR_INPUT);
+//
+	//// Pushbutton pin ioport config
+	//ioport_set_pin_dir(WIFI_SETUP_BUTTON_MASK, IOPORT_DIR_INPUT);
+	//ioport_set_pin_mode(WIFI_SETUP_BUTTON_MASK,IOPORT_MODE_PULLUP);
+	//ioport_set_pin_dir(WIFI_RESET_MASK, IOPORT_DIR_OUTPUT);
+	//ioport_set_pin_mode(WIFI_RESET_MASK, IOPORT_MODE_PULLDOWN);
+//
+	//// Reset wifi chip
+	//ioport_set_pin_level(WIFI_RESET_MASK,false);
+	//delay_ms(500);
+	//ioport_set_pin_level(WIFI_RESET_MASK,true);
+	//delay_ms(500);
 
 
-	// Control line pin ioport config
-	ioport_set_pin_dir(WIFI_COMM_MASK,IOPORT_DIR_INPUT);
-	ioport_set_pin_dir(WIFI_NET_MASK,IOPORT_DIR_INPUT);
-	ioport_set_pin_dir(WIFI_CLIENT_PIN_MASK,IOPORT_DIR_INPUT);
-
-	// Pushbutton pin ioport config
-	ioport_set_pin_dir(WIFI_SETUP_BUTTON_MASK, IOPORT_DIR_INPUT);
-	ioport_set_pin_mode(WIFI_SETUP_BUTTON_MASK,IOPORT_MODE_PULLUP);
-	ioport_set_pin_dir(WIFI_RESET_MASK, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_mode(WIFI_RESET_MASK, IOPORT_MODE_PULLDOWN);
-
-	// Reset wifi chip
-	ioport_set_pin_level(WIFI_RESET_MASK,false);
-	delay_ms(500);
-	ioport_set_pin_level(WIFI_RESET_MASK,true);
-	delay_ms(500);
-
-
-	// Set Control Line pins on ESP32
-	sprintf (buff, "set comm_gpio %d",ESP_COMM_GPIO);
-	write_wifi_command(buff,2);
-	sprintf (buff, "set net_gpio %d", ESP_NET_GPIO);
-	write_wifi_command(buff,2);
-	sprintf (buff, "set clients_gpio %d", ESP_CLIENT_GPIO);
-	write_wifi_command(buff,2);
-
-	// Send ESP32 indicator LED config commands
-	sprintf (buff, "set wlan_gpio %d", ESP_NET_LED);
-	write_wifi_command(buff,2);
-	sprintf (buff, "set websocket_gpio %d", ESP_CLIENT_LED);
-	write_wifi_command(buff,2);
-	sprintf (buff, "set ap_gpio %d", ESP_PROV_LED);
-	write_wifi_command(buff,2);
-
-	//write_wifi_command("test",10);
-
-	reading_wifi_flag = false;
-	provisioning_flag = false;
+	//// Set Control Line pins on ESP32
+	//sprintf (buff, "set comm_gpio %d",ESP_COMM_GPIO);
+	//write_wifi_command(buff,2);
+	//sprintf (buff, "set net_gpio %d", ESP_NET_GPIO);
+	//write_wifi_command(buff,2);
+	//sprintf (buff, "set clients_gpio %d", ESP_CLIENT_GPIO);
+	//write_wifi_command(buff,2);
+//
+	//// Send ESP32 indicator LED config commands
+	//sprintf (buff, "set wlan_gpio %d", ESP_NET_LED);
+	//write_wifi_command(buff,2);
+	//sprintf (buff, "set websocket_gpio %d", ESP_CLIENT_LED);
+	//write_wifi_command(buff,2);
+	//sprintf (buff, "set ap_gpio %d", ESP_PROV_LED);
+	//write_wifi_command(buff,2);
+//
+	////write_wifi_command("test",10);
+//
+	//reading_wifi_flag = false;
+	//provisioning_flag = false;
 
 	/* Insert application code here, after the board has been initialized. */
 
 
-	// Loop while waiting for UART connection confirmation
-	while (!ioport_get_pin_level(WIFI_NET_MASK))	{
-		ioport_set_pin_level(LED_PIN,true);
-		//ioport_set_pin_level(WIFI_RESET_MASK,true);
-		// Check if WIFI_SETUP_BUTTON was pressed and send provision command if so
-		if (provisioning_flag) {
-			write_wifi_command("provision",1);
-			provisioning_flag = false;
-			ioport_set_pin_level(LED_PIN2,false);
-			delay_s(1);
-			ioport_set_pin_level(LED_PIN2,true);
-		}
-	}
-
-	while (!reading_wifi_flag)	{
-		// Reset wifi chip
-		ioport_set_pin_level(WIFI_RESET_MASK,false);
-		delay_ms(500);
-		ioport_set_pin_level(WIFI_RESET_MASK,true);
-		delay_ms(500);
-	
+	//// Loop while waiting for UART connection confirmation
+	//while (!ioport_get_pin_level(WIFI_NET_MASK))	{
 		//ioport_set_pin_level(LED_PIN,true);
+		////ioport_set_pin_level(WIFI_RESET_MASK,true);
+		//// Check if WIFI_SETUP_BUTTON was pressed and send provision command if so
+		//if (provisioning_flag) {
+			//write_wifi_command("provision",1);
+			//provisioning_flag = false;
+			//ioport_set_pin_level(LED_PIN2,false);
+			//delay_s(1);
+			//ioport_set_pin_level(LED_PIN2,true);
+		//}
+	//}
+//
+	//while (!reading_wifi_flag)	{
+		//// Reset wifi chip
+		//ioport_set_pin_level(WIFI_RESET_MASK,false);
 		//delay_ms(500);
-		//ioport_set_pin_level(LED_PIN,false);
-	
-		// Send UART Test command and wait 10 seconds
-		write_wifi_command("test",10);
-		delay_s(1);
-	
-	}
+		//ioport_set_pin_level(WIFI_RESET_MASK,true);
+		//delay_ms(500);
+	//
+		////ioport_set_pin_level(LED_PIN,true);
+		////delay_ms(500);
+		////ioport_set_pin_level(LED_PIN,false);
+	//
+		//// Send UART Test command and wait 10 seconds
+		//write_wifi_command("test",10);
+		//delay_s(1);
+	//
+	//}
 
 
 	// Start Main Loop
 	while (1)	{
 		// Check if WIFI_SETUP_BUTTON was pressed and send provision command if so
 		//ioport_set_pin_level(LED_PIN,false);
-		ioport_set_pin_level(LED_PIN2,true);
-		if (provisioning_flag) {
-			write_wifi_command("provision",1);
+		//ioport_set_pin_level(LED_PIN2,true);
+		//if (provisioning_flag) {
+			//write_wifi_command("provision",1);
+			////ioport_set_pin_level(LED_PIN,true);
+			////delay_s(2);
+			////ioport_set_pin_level(LED_PIN,false);
+			//provisioning_flag = false;
+		//}
+	//
+		//if (ioport_get_pin_level(WIFI_NET_MASK)) {// & ioport_get_pin_level(WIFI_CLIENT_PIN_MASK))	{
+			//// Send image command
+			////write_image_to_web();
 			//ioport_set_pin_level(LED_PIN,true);
-			//delay_s(2);
+			//delay_s(1);
 			//ioport_set_pin_level(LED_PIN,false);
-			provisioning_flag = false;
-		}
+		//}
 	
-		if (ioport_get_pin_level(WIFI_NET_MASK)) {// & ioport_get_pin_level(WIFI_CLIENT_PIN_MASK))	{
-			// Send image command
-			//write_image_to_web();
-			ioport_set_pin_level(LED_PIN,true);
-			delay_s(1);
-			ioport_set_pin_level(LED_PIN,false);
-		}
+	
+		//for debug only
+		uint8_t len_success = start_capture();
+		delay_s(2);
+		
+
+	
 	
 	}
 	

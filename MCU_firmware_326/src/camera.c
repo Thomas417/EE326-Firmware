@@ -90,20 +90,18 @@ void init_camera(void){
 	/* Init PIO capture*/
 	pio_capture_init(OV_DATA_BUS_PIO, OV_DATA_BUS_ID);
 
-	/* Turn on ov7740 image sensor using power pin */
-	ov_power(true, OV_POWER_PIO, OV_POWER_MASK);
+	///* Turn on ov7740 image sensor using power pin */
+	//ov_power(true, OV_POWER_PIO, OV_POWER_MASK);
 
 	/* Init PCK0 to work at 24 Mhz */
 	/* 96/4=24 Mhz */
-	PMC->PMC_PCK[0] = (PMC_PCK_PRES_CLK_4 | PMC_PCK_CSS_PLLA_CLK);
-	PMC->PMC_SCER = PMC_SCER_PCK0;
-	while (!(PMC->PMC_SCSR & PMC_SCSR_PCK0)) {
+	//PMC->PMC_PCK[0] = (PMC_PCK_PRES_CLK_4 | PMC_PCK_CSS_PLLA_CLK);
+	PMC->PMC_PCK[1] = (PMC_PCK_PRES_CLK_4 | PMC_PCK_CSS_PLLA_CLK);
+	PMC->PMC_SCER = PMC_SCER_PCK1;
+	while (!(PMC->PMC_SCSR & PMC_SCSR_PCK1)) {
 	}
 	
 	pmc_enable_pllack(7, 0x1, 1); /* PLLA work at 96 Mhz */
-	
-	/* Turn on ov7740 image sensor using power pin */
-	ov_power(true, OV_POWER_PIO, OV_POWER_MASK);
 	
 	configure_twi();
 	
@@ -213,21 +211,41 @@ uint8_t find_image_len(void){
 	uint8_t image_started = 0; //logical T/F
 	uint8_t image_ended = 0;
 	image_size = 0;
-	uint8_t byte;
+	uint8_t byte1, byte2;
 	
-	for (uint32_t i = 0; i < ul_size; ++i){
-				
-		//look for start of image
-		byte = p_uc_buf[i];
-		if (byte == 0xFFD8) {
-			image_started = 1;
-		} else if (byte == 0xFFD9) {
-			image_ended = 1;
-			break;
-		} else if (image_started) {
-			image_size++; 			//add +1 to the length counter
+	//for (uint32_t i = 0; i < ul_size; ++i){
+				//
+		////need to check 2 consecutive bytes
+				//
+				//
+		////look for start of image
+		//byte = p_uc_buf[i];
+		//if (byte == 0xFFD8) {
+			//image_started = 1;
+		//} else if (byte == 0xFFD9) {
+			//image_ended = 1;
+			//break;
+		//} else if (image_started) {
+			//image_size++; 			//add +1 to the length counter
+		//}
+	//}
+	
+	for (uint32_t i = 0; i < (int)ul_size/2; ++i){
+			
+			//need to check 2 consecutive bytes
+			byte1 = p_uc_buf[2*i];
+			byte2 = p_uc_buf[2*i+1];
+			
+			//look for start of image
+			if (byte1 == 0xFF && byte2 == 0xD8){
+				image_started = 1;
+			} else if (byte1 == 0xFF && byte2 == 0xD9) {
+				image_ended = 1;
+				break;
+			} else if (image_started) {
+				image_size++; 			//add +1 to the length counter
+			}
 		}
-	}
 	
 	//return 0 if start or end markers weren't encountered, 1 otherwise
 	return (!image_started || !image_ended);
