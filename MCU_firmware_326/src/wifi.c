@@ -241,9 +241,13 @@ void prepare_spi_transfer(void){
 	//Set necessary parameters to prepare for SPI transfer.
 	gs_ul_transfer_length = MAX_LENGTH;
 	gs_ul_transfer_index = 0;
+	
+	
 	char* spi_test[1000];
 	sprintf(spi_test,"Test");
-	spi_write(SPI_SLAVE_BASE, spi_test[gs_ul_transfer_index], 0,0);
+	
+	
+	spi_write(SPI_SLAVE_BASE, gs_puc_transfer_buffer[gs_ul_transfer_index], 0,0);
 	//sprintf(gs_puc_transfer_buffer,)
 	
 }
@@ -257,7 +261,7 @@ void write_image_to_web(void){
 	 //(i.e. the image is not valid), return. Otherwise, follow this protocol
 	 //(illustrated in Appendix C):
 	
-	//if (image_size == 0) { return; }
+	if (image_size == 0) { return; }
 
 	 //Configure the SPI interface to be ready for a transfer by setting its parameters appropriately.
 	 prepare_spi_transfer();

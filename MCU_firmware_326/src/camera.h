@@ -13,8 +13,8 @@
 
 /* Image sensor board defines. */
 // Image sensor Power pin.
-//#define OV_POWER_PIO                   OV_SW_OVT_PIO
-//#define OV_POWER_MASK                  OV_SW_OVT_MASK
+#define OV_POWER_PIO                   OV_SW_OVT_PIO
+#define OV_POWER_MASK                  OV_SW_OVT_MASK
 // Image sensor VSYNC pin.
 #define OV7740_VSYNC_PIO			   OV_VSYNC_PIO
 #define OV7740_VSYNC_ID				   OV_VSYNC_ID
