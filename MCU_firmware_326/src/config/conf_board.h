@@ -27,6 +27,7 @@
 #define CONF_BOARD_SPI_NPCS0 /** SPI slave select MACRO definition */
 #define SPI_ID          ID_SPI  /** Spi Hw ID . */
 #define SPI_SLAVE_BASE       SPI /** SPI base address for SPI slave mode */
+#define wifi_spi_handler	SPI_Handler
 
 /** Initialization of pins **/
 #define PIN_SPI_MISO                   {PIO_PA12A_MISO, PIOA, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT} /** SPI MISO pin. */

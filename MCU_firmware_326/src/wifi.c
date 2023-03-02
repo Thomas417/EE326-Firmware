@@ -184,20 +184,16 @@ void wifi_spi_handler(void){
 	if (spi_read_status(SPI_SLAVE_BASE) & SPI_SR_RDRF) {
 			
 		spi_read(SPI_SLAVE_BASE, &data, &uc_pcs);
-		gs_puc_transfer_buffer[gs_ul_transfer_index] = data;
-		gs_ul_transfer_index++;
-		gs_ul_transfer_length--;
+		//gs_puc_transfer_buffer[gs_ul_transfer_index] = data;
+		//gs_ul_transfer_index++;
+		//gs_ul_transfer_length--;
 			
-		if (gs_ul_transfer_length) {
+		if (gs_ul_transfer_length--) {
 			//transfer one byte of image
 			spi_write(SPI_SLAVE_BASE,
-			gs_puc_transfer_buffer[gs_ul_transfer_index], 0, 0);
+			g_p_uc_cap_dest_buf[gs_ul_transfer_index++], 0, 0);
 		}
 		
-	}
-	
-	if (gs_ul_transfer_length ==1) {
-		last_byte_sent = g_p_uc_cap_dest_buf[gs_ul_transfer_index];
 	}
 }
 
