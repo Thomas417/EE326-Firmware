@@ -235,8 +235,8 @@ void prepare_spi_transfer(void){
 	gs_ul_transfer_index = 0;
 	
 	
-	char* spi_test[1000];
-	sprintf(spi_test,"Test");
+	//char* spi_test[1000];
+	// sprintf(spi_test,"Test");
 	
 	
 	spi_write(SPI_SLAVE_BASE, gs_puc_transfer_buffer[gs_ul_transfer_index], 0,0);

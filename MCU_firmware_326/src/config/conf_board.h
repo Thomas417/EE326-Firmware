@@ -178,12 +178,12 @@
 //#define OV_SW_OVT_TYPE                 PIO_OUTPUT_1
 
 /** OV_RST pin definition */
-//#define OV_RST_GPIO                    PIO_PC15_IDX
-//#define OV_RST_FLAGS                   (PIO_OUTPUT_1 | PIO_DEFAULT)
-//#define OV_RST_MASK                    PIO_PC15
-//#define OV_RST_PIO                     PIOC
-//#define OV_RST_ID                      ID_PIOC
-//#define OV_RST_TYPE                    PIO_OUTPUT_1
+#define OV_RST_GPIO                    PIO_PA20_IDX
+#define OV_RST_FLAGS                   (PIO_OUTPUT_1 | PIO_DEFAULT)
+#define OV_RST_MASK                    PIO_PC15
+#define OV_RST_PIO                     PIOC
+#define OV_RST_ID                      ID_PIOC
+#define OV_RST_TYPE                    PIO_OUTPUT_1
 
 /** OV_FSIN definition */
 //#define OV_FSIN_GPIO                   PIO_PA21_IDX
@@ -226,7 +226,7 @@
 #define OV_DATA_BUS_ATTR               PIO_DEFAULT
 
 // RST Pin (this is only driven high)
-#define OV2640_RST_MASK					PIO_PA20_IDX
+//#define OV2640_RST_MASK					PIO_PA20_IDX
 
 
 
