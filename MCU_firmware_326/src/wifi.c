@@ -189,11 +189,15 @@ void wifi_spi_handler(void){
 		gs_ul_transfer_length--;
 			
 		if (gs_ul_transfer_length) {
-			
 			//transfer one byte of image
 			spi_write(SPI_SLAVE_BASE,
 			gs_puc_transfer_buffer[gs_ul_transfer_index], 0, 0);
 		}
+		
+	}
+	
+	if (gs_ul_transfer_length ==1) {
+		last_byte_sent = g_p_uc_cap_dest_buf[gs_ul_transfer_index];
 	}
 }
 
@@ -254,18 +258,24 @@ void write_image_to_web(void){
 	 //(illustrated in Appendix C):
 	
 	if (image_size == 0) { return; }
+		
+		gs_puc_transfer_buffer = g_p_uc_cap_dest_buf;
+		gs_ul_transfer_index = start_pos;
+		gs_ul_transfer_length = image_size;
 
-	 //Configure the SPI interface to be ready for a transfer by setting its parameters appropriately.
-	 prepare_spi_transfer();
+		//Configure the SPI interface to be ready for a transfer by setting its parameters appropriately.
+		prepare_spi_transfer();
 
-	 //Issue the command “image_transfer xxxx”, where xxxx is replaced by the length of the
-	 //image you want to transfer.
-	 image_size = 1000;
-	 sprintf(input_line_wifi, "image_transfer %d", image_size);
-	 write_wifi_command(input_line_wifi, 1);
-	 delay_ms(500);
+		//Issue the command “image_transfer xxxx”, where xxxx is replaced by the length of the
+		//image you want to transfer.
+		char* command_buffer[100];
+		 //image_size = 1000;
+		 //sprintf(command_buffer, "image_transfer %d", image_size); // Full image transfer command
+		sprintf(command_buffer, "image_test %d", image_size); // Test image transfer command
+		write_wifi_command(command_buffer, 1);
+		delay_ms(500);
 	 
-	 //The ESP32 will then set the “command complete” pin low and begin transferring the image
-	 //over SPI. //After the image is done sending, the ESP32 will set the “command complete” pin high. The
-	 //MCU should sense this and then move on.
+		 //The ESP32 will then set the “command complete” pin low and begin transferring the image
+		 //over SPI. //After the image is done sending, the ESP32 will set the “command complete” pin high. The
+		 //MCU should sense this and then move on.
 }

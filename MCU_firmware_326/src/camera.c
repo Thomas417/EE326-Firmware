@@ -15,8 +15,7 @@
 
 #define TWI_CLK     (400000UL) /* TWI clock frequency in Hz (400KHz) */
 //uint8_t *g_p_uc_cap_dest_buf; /* Pointer to the image data destination buffer */ //ILYA: Should this be a buffer instead of a pointer?
-uint8_t g_p_uc_cap_dest_buf[100000];
-uint16_t g_us_cap_rows = IMAGE_HEIGHT; /* Rows size of capturing picture */
+//uint16_t g_us_cap_rows = IMAGE_HEIGHT; /* Rows size of capturing picture */
 //ul_size = 100000000; 
 
 ///* Define display function and line size of captured picture according to the */	// Display config not needed?
@@ -200,8 +199,9 @@ uint8_t start_capture(void){
 	g_ul_vsync_flag = false;
 	
 	/* Check Size  */
-	uint8_t len_success = find_image_len();
-	return (image_size > 0);
+	len_success = 0;
+	find_image_len();
+	return len_success;
 	
 }
 
@@ -212,27 +212,42 @@ uint8_t find_image_len(void){
 	
 	//iterate through the buffer and look for start and end of image markers
 	//start is 0xFFD8; end is 0xFFD9
-	uint8_t image_started = 0; //logical T/F
-	uint8_t image_ended = 0;
 	image_size = 0;
+	image_started = 0;
+	image_ended = 0;
 	uint8_t byte;
+	uint8_t next_byte;
+	uint8_t complete = 0;
 	
-	for (uint32_t i = 0; i < ul_size; ++i){
+	for (uint32_t i = 0; i < 100000; ++i){
 				
 		//look for start of image
-		byte = p_uc_buf[i];
-		if (byte == 0xFFD8) {
+		//#ifndef next_byte
+		//
+			//next_byte = g_p_uc_cap_dest_buf[i+1];
+		//#endif
+		byte = g_p_uc_cap_dest_buf[i];
+		next_byte = g_p_uc_cap_dest_buf[i+1];
+		
+		if (byte == 0xff && next_byte == 0xd8) {
 			image_started = 1;
-		} else if (byte == 0xFFD9) {
-			image_ended = 1;
-			break;
-		} else if (image_started) {
-			image_size++; 			//add +1 to the length counter
+			image_ended = 0;
+			start_pos = i;
 		}
-	}
+		if (byte == 0xff && next_byte == 0xd9) {
+			image_ended = 1;
+			end_pos = i;
+		}
+		if (image_started && image_ended) {
+			len_success = 1;
+			break; 			//add +1 to the length counter
+		}
+		image_size += image_started;
+		}
+		
+		
 	
 	//return 0 if start or end markers weren't encountered, 1 otherwise
-	return (!image_started || !image_ended);
 	
 }
 
