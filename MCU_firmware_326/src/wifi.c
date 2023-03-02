@@ -70,10 +70,7 @@ void process_data_wifi() {
 }
 
 void configure_usart(void)
-{
-	gpio_configure_pin(PIN_USART0_RXD_IDX, PIN_USART0_RXD_FLAGS);
-	gpio_configure_pin(PIN_USART0_TXD_IDX, PIN_USART0_TXD_FLAGS);
-	
+{	
 	const sam_usart_opt_t usart_console_settings = {
 		WIFI_USART_BAUDRATE,
 		US_MR_CHRL_8_BIT,
@@ -201,12 +198,7 @@ void wifi_spi_handler(void){
 }
 
 void configure_spi(void){
-	
-	gpio_configure_pin(SPI_MISO_GPIO, SPI_MISO_FLAGS);
-	gpio_configure_pin(SPI_MOSI_GPIO, SPI_MOSI_FLAGS);
-	gpio_configure_pin(SPI_SPCK_GPIO, SPI_SPCK_FLAGS);
-	gpio_configure_pin(SPI_NPCS0_GPIO, SPI_NPCS0_FLAGS);
-	
+		
 	/* Configure SPI interrupts for slave only. */
 	NVIC_DisableIRQ(SPI_IRQn);
 	NVIC_ClearPendingIRQ(SPI_IRQn);

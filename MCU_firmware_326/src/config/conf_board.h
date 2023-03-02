@@ -11,11 +11,6 @@
 #ifndef CONF_BOARD_H
 #define CONF_BOARD_H
 
-#define CONF_BOARD_SPI /** SPI MACRO definition */
-#define CONF_BOARD_SPI_NPCS0 /** SPI slave select MACRO definition */
-#define SPI_ID          ID_SPI  /** Spi Hw ID . */
-#define SPI_SLAVE_BASE       SPI /** SPI base address for SPI slave mode */
-
 //#define CONF_BOARD_UART_CONSOLE /** Enable Com Port. */
 //#define CONSOLE_UART_ID          ID_UART0 /** Usart Hw ID used by the console (UART0). */
 
@@ -26,21 +21,18 @@
 //
 //
 /******************************* SPI definition *********************************/
-/** SPI MISO pin. */
-#define PIN_SPI_MISO                   {PIO_PA12A_MISO, PIOA, ID_PIOA,	\
-                                         PIO_PERIPH_A, PIO_DEFAULT}
 
-/** SPI MOSI pin. */
-#define PIN_SPI_MOSI                   {PIO_PA13A_MOSI, PIOA, ID_PIOA,	\
-                                         PIO_PERIPH_A, PIO_DEFAULT}
+/** Conf_board. */
+#define CONF_BOARD_SPI /** SPI MACRO definition */
+#define CONF_BOARD_SPI_NPCS0 /** SPI slave select MACRO definition */
+#define SPI_ID          ID_SPI  /** Spi Hw ID . */
+#define SPI_SLAVE_BASE       SPI /** SPI base address for SPI slave mode */
 
-/** SPI SPCK pin. */
-#define PIN_SPI_SPCK                   {PIO_PA14A_SPCK, PIOA, ID_PIOA,	\
-                                         PIO_PERIPH_A, PIO_DEFAULT}
-
-/** SPI chip select pin. */
-#define PIN_SPI_NPCS0                  {PIO_PA11A_NPCS0, PIOA, ID_PIOA, \
-                                         PIO_PERIPH_A, PIO_DEFAULT}
+/** Initialization of pins **/
+#define PIN_SPI_MISO                   {PIO_PA12A_MISO, PIOA, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT} /** SPI MISO pin. */
+#define PIN_SPI_MOSI                   {PIO_PA13A_MOSI, PIOA, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT} /** SPI MOSI pin. */
+#define PIN_SPI_SPCK                   {PIO_PA14A_SPCK, PIOA, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT} /** SPI SPCK pin. */
+#define PIN_SPI_NPCS0                  {PIO_PA11A_NPCS0, PIOA, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT} /** SPI chip select pin. */
 
 /** SPI MISO pin definition. */
 #define SPI_MISO_GPIO                  (PIO_PA12_IDX)
@@ -79,13 +71,14 @@
 #define SPI_NPCS0_ATTR                 PIO_DEFAULT
 
 /******************************* TWI definition*********************************/
-/** TWI0 data pin */
-#define PIN_TWI_TWD0                   {PIO_PA3A_TWD0, PIOA, ID_PIOA, \
-                                         PIO_PERIPH_A, PIO_DEFAULT}
 
-/** TWI0 clock pin */
-#define PIN_TWI_TWCK0                  {PIO_PA4A_TWCK0, PIOA, ID_PIOA,	\
-                                         PIO_PERIPH_A, PIO_DEFAULT}
+/** TWI0 pins */
+#define PINS_TWI0                      PIN_TWI_TWD0, PIN_TWI_TWCK0
+#define ID_BOARD_TWI		               ID_TWI0
+#define BOARD_TWI			                 TWI0
+#define BOARD_TWI_IRQn		             TWI0_IRQn
+#define PIN_TWI_TWD0                   {PIO_PA3A_TWD0, PIOA, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT} /** TWI0 data pin */
+#define PIN_TWI_TWCK0                  {PIO_PA4A_TWCK0, PIOA, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT} /** TWI0 clock pin */
 
 /** TWI0 Data pins definition */
 #define TWI0_DATA_GPIO                 PIO_PA3_IDX
@@ -105,13 +98,7 @@
 #define TWI0_CLK_TYPE                  PIO_PERIPH_A
 #define TWI0_CLK_ATTR                  PIO_DEFAULT
 
-/** TWI0 pins */
-#define PINS_TWI0                      PIN_TWI_TWD0, PIN_TWI_TWCK0
-
-#define ID_BOARD_TWI		               ID_TWI0
-#define BOARD_TWI			                 TWI0
-#define BOARD_TWI_IRQn		             TWI0_IRQn
-
+/** Conf_board */
 #define CONF_BOARD_TWI0 /** Configure TWI0 pins (for OV7740  communications). */
 #define CONF_BOARD_PCK1 /** Configure PCK1 pins (for OV7740  communications). */
 
@@ -120,11 +107,8 @@
 #define BOARD_TWI                      TWI0
 #define BOARD_TWI_IRQn                 TWI0_IRQn
 
-
 /** PCK1 */
 #define PIN_PCK1                       (PIO_PA17_IDX)
-#define PIN_PCK1_FLAGS                 (PIO_PERIPH_A | PIO_DEFAULT)
-
-
+#define PIN_PCK1_FLAGS                 (PIO_PERIPH_B | PIO_DEFAULT)
 
 #endif // CONF_BOARD_H

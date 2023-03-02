@@ -57,24 +57,7 @@ void init_vsync_interrupts(void){
 void configure_twi(void){
 	//Configuration of TWI (two wire interface)
 	twi_options_t opt;
-	
-	// TWI Pin config
-	gpio_configure_pin(TWI0_DATA_GPIO, TWI0_DATA_FLAGS);
-	gpio_configure_pin(TWI0_CLK_GPIO, TWI0_CLK_FLAGS);
-	
-	// Data Bus and Camera Utility Pin config
-	//gpio_configure_pin(OV2640_RST_MASK, OV2640_RST_MASK);
-	gpio_configure_pin(OV_HSYNC_GPIO, OV_HSYNC_FLAGS);
-	gpio_configure_pin(OV_VSYNC_GPIO, OV_VSYNC_FLAGS);
-	gpio_configure_pin(OV_DATA_BUS_D2, OV_DATA_BUS_FLAGS);
-	gpio_configure_pin(OV_DATA_BUS_D3, OV_DATA_BUS_FLAGS);
-	gpio_configure_pin(OV_DATA_BUS_D4, OV_DATA_BUS_FLAGS);
-	gpio_configure_pin(OV_DATA_BUS_D5, OV_DATA_BUS_FLAGS);
-	gpio_configure_pin(OV_DATA_BUS_D6, OV_DATA_BUS_FLAGS);
-	gpio_configure_pin(OV_DATA_BUS_D7, OV_DATA_BUS_FLAGS);
-	gpio_configure_pin(OV_DATA_BUS_D8, OV_DATA_BUS_FLAGS);
-	gpio_configure_pin(OV_DATA_BUS_D9, OV_DATA_BUS_FLAGS);
-
+		
 	/* Enable TWI peripheral */
 	pmc_enable_periph_clk(ID_BOARD_TWI);
 
@@ -108,17 +91,13 @@ void init_camera(void){
 
 	// Enable XCLCK
 	pmc_enable_pllbck(7, 0x1, 1); /* PLLA work at 96 Mhz */ // PA17 is xclck signal
-
+	
 	/* Init PCK1 to work at 24 Mhz initialize PLLB*/
 	/* 96/4=24 Mhz */
 	PMC->PMC_PCK[1] = (PMC_PCK_PRES_CLK_4 | PMC_PCK_CSS_PLLB_CLK);
 	PMC->PMC_SCER = PMC_SCER_PCK1;
 	while (!(PMC->PMC_SCSR & PMC_SCSR_PCK1)) {
 	}
-	
-	// Set XCLK Pin
-	gpio_configure_pin(PIN_PCK1, PIN_PCK1_FLAGS);
-
 	
 	// RST Pin Management
 	ioport_set_pin_dir(OV2640_RST_MASK,IOPORT_DIR_OUTPUT);
@@ -128,8 +107,6 @@ void init_camera(void){
 	// Initialize camera and wait to let it adjust  // ASK ILYA
 	//while (ov_init(BOARD_TWI) == 1) {
 	//}
-	
-
 	
 }
 
