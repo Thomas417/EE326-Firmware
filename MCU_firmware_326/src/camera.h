@@ -11,8 +11,6 @@
 #include <asf.h>
 #include "helpers/ov2640.h"
 
-//DEFINE camera TWI parameters here
-
 //DECLARE camera variables here
 uint32_t ul_id, ul_mask; //things in the interrupt function definition by default
 Pio *p_pio;

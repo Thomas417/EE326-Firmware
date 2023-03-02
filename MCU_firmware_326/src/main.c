@@ -89,6 +89,10 @@ int main (void)
 	ioport_set_pin_dir(WIFI_RESET_MASK, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_mode(WIFI_RESET_MASK, IOPORT_MODE_PULLUP);
 
+	// RST Pin Management - for camera
+	ioport_set_pin_dir(OV2640_RST_MASK,IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(OV2640_RST_MASK,true);
+
 	// Reset wifi chip
 	ioport_set_pin_level(WIFI_RESET_MASK,false);
 	delay_ms(500);

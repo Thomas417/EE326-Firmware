@@ -11,13 +11,9 @@
 #include <asf.h>
 #include <string.h>
 
-
-
 // Test LED Pins, for breadboard debugging
 #define LED_PIN		PIO_PA19_IDX
 #define LED_PIN2	PIO_PA22_IDX
-
-
 
 // ESP32 GPIO pins (on the ESP32 NOT the MCU!)
 #define ESP_COMM_GPIO					22	// Control line to MCU (ON ESP32)

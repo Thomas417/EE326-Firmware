@@ -80,9 +80,6 @@ void init_camera(void){
 	//calling the configure_twi() function.
 	configure_twi();
 	
-	//configure camera pins
-	//configure camera clock
-	
 	/* Init Vsync handler*/
 	init_vsync_interrupts();
 
@@ -97,16 +94,11 @@ void init_camera(void){
 	PMC->PMC_PCK[1] = (PMC_PCK_PRES_CLK_4 | PMC_PCK_CSS_PLLB_CLK);
 	PMC->PMC_SCER = PMC_SCER_PCK1;
 	while (!(PMC->PMC_SCSR & PMC_SCSR_PCK1)) {
-	}
-	
-	// RST Pin Management
-	ioport_set_pin_dir(OV2640_RST_MASK,IOPORT_DIR_OUTPUT);
-	ioport_set_pin_level(OV2640_RST_MASK,true);
-	
+	}	
 	
 	// Initialize camera and wait to let it adjust  // ASK ILYA
-	//while (ov_init(BOARD_TWI) == 1) {
-	//}
+	while (ov_init(BOARD_TWI) == 1) {
+	}
 	
 }
 
@@ -116,6 +108,10 @@ void configure_camera(void){
 	ov_configure(BOARD_TWI, YUV422);
 	ov_configure(BOARD_TWI, JPEG);
 	ov_configure(BOARD_TWI, JPEG_320x240);
+	
+	//let the camera adapt to environment
+	delay_ms(3000);
+
 	
 	//there may be more to it than this
 
