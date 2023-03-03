@@ -128,6 +128,7 @@ void write_wifi_command(char* comm, uint8_t cnt) //TODO: Implement timeout mecha
 	/* Writes a command (comm) to the ESP32, and waits either for an acknowledgment or a timeout. The timeout can be
 	 created by setting the global variable counts to zero, which will automatically increment every second, and waiting
 	while counts < cnt. */
+	command_flag = false;
 	char wifi_buff[100];
 	sprintf (wifi_buff, "%s\r\n", comm);
 	usart_write_line(WIFI_USART, wifi_buff);
@@ -197,7 +198,7 @@ void wifi_spi_handler(void){
 	if (spi_read_status(SPI_SLAVE_BASE) & SPI_SR_RDRF) {
 			
 		spi_read(SPI_SLAVE_BASE, &data, &uc_pcs);
-		//times_through_buffer++;
+		times_through_buffer++;
 
 		
 		//gs_puc_transfer_buffer[gs_ul_transfer_index] = data;
@@ -265,9 +266,9 @@ void spi_peripheral_initialize(void){
 void prepare_spi_transfer(void){
 	//Set necessary parameters to prepare for SPI transfer.
 	gs_puc_transfer_buffer = g_p_uc_cap_dest_buf;
-	gs_ul_transfer_index = start_pos;
+	gs_ul_transfer_index = start_pos ;
 	// gs_ul_transfer_length = image_size;
-	gs_ul_transfer_length = image_size+1;
+	gs_ul_transfer_length = image_size;
 	image_sent_flag = 0;
 	
 	
@@ -297,6 +298,7 @@ void write_image_to_web(void){
 		//last_byte_sent = gs_puc_transfer_buffer[gs_ul_transfer_index + gs_ul_transfer_length];
 
 		//Configure the SPI interface to be ready for a transfer by setting its parameters appropriately.
+		times_through_buffer = 0;
 		prepare_spi_transfer();
 
 		//Issue the command “image_transfer xxxx”, where xxxx is replaced by the length of the
