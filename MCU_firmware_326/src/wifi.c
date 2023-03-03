@@ -89,6 +89,7 @@ void configure_usart(void)
 
 	/* Enable the peripheral clock in the PMC. */
 	sysclk_enable_peripheral_clock(WIFI_ID_USART);
+	//could be pmc_enable_peripheral_clock?)
 
 	/* Configure USART in serial mode. */
 	usart_init_rs232(WIFI_USART, &usart_console_settings, sysclk_get_peripheral_hz());
