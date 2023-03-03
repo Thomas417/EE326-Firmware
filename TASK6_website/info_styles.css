@@ -1,0 +1,28 @@
+.bio_div {
+    width: 100%;
+    display: flex;
+}
+
+.bio_pic {
+    width: 45%;
+    /*margin-left: 20%;
+    margin-right: 20%;
+    padding: 10px; 
+    */
+    flex:45%
+}
+
+
+.bio_text {
+    flex:55%
+    text-align: center;
+}
+
+#bios {
+    text-align: center;
+}
+
+.title_text {
+    text-align:center;
+    font-size: 200%;
+}
