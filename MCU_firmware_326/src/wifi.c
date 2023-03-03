@@ -267,9 +267,9 @@ void spi_peripheral_initialize(void){
 void prepare_spi_transfer(void){
 	//Set necessary parameters to prepare for SPI transfer.
 	gs_puc_transfer_buffer = g_p_uc_cap_dest_buf;
-	gs_ul_transfer_index = start_pos ;
+	gs_ul_transfer_index = start_pos;
 	// gs_ul_transfer_length = image_size;
-	gs_ul_transfer_length = image_size;
+	gs_ul_transfer_length = image_size+1;
 	image_sent_flag = 0;
 	
 	
@@ -307,12 +307,12 @@ void write_image_to_web(void){
 		char* command_buffer[100];
 		 //image_size = 1000;
 		 //sprintf(command_buffer, "image_transfer %d", image_size); // Full image transfer command
-		sprintf(command_buffer, "image_test %d", image_size+3); // Test image transfer command
+		sprintf(command_buffer, "image_transfer %d", image_size+3); // Test image transfer command
 		write_wifi_command(command_buffer, 5);
 		//while (!image_sent_flag){}
 		delay_ms(500);
 	 
-		 //The ESP32 will then set the “command complete” pin low and begin transferring the image
-		 //over SPI. //After the image is done sending, the ESP32 will set the “command complete” pin high. The
-		 //MCU should sense this and then move on.
+		//The ESP32 will then set the “command complete” pin low and begin transferring the image
+		//over SPI. //After the image is done sending, the ESP32 will set the “command complete” pin high. The
+		//MCU should sense this and then move on.
 }

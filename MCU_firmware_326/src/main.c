@@ -210,7 +210,7 @@ int main (void)
 			// Send image command
 			
 			start_capture();
-			delay_ms(1000);
+			delay_ms(100);//500
 			if (len_success) {
 				write_image_to_web();
 			}
