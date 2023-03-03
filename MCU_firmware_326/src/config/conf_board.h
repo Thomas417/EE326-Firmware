@@ -237,7 +237,7 @@
 #define WIFI_ID_USART				ID_USART0
 #define WIFI_USART					USART0
 #define WIFI_USART_BAUDRATE		115200
-#define wifi_usart_handler		USART0_Handler
+#define wifi_usart_handler			USART0_Handler
 #define USART_IRQn					USART0_IRQn
 
 #define ALL_INTERRUPT_MASK  0xffffffff

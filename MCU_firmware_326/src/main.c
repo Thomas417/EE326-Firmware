@@ -140,10 +140,11 @@ int main (void)
 	// Test Loop, REMOVE BEFORE TESTING NONCAMERA FUNCTIONS
 	while (1) {
 		start_capture();
+		delay_ms(1000);
 		if (len_success) {
 			write_image_to_web();
 		}
-		delay_ms(1000);
+		delay_ms(500);
 		
 		
 		
