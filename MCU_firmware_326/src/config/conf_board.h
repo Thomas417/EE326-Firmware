@@ -27,6 +27,7 @@
 #define CONF_BOARD_SPI_NPCS0 /** SPI slave select MACRO definition */
 #define SPI_ID          ID_SPI  /** Spi Hw ID . */
 #define SPI_SLAVE_BASE       SPI /** SPI base address for SPI slave mode */
+#define wifi_spi_handler	SPI_Handler
 
 /** Initialization of pins **/
 #define PIN_SPI_MISO                   {PIO_PA12A_MISO, PIOA, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT} /** SPI MISO pin. */
@@ -178,12 +179,12 @@
 //#define OV_SW_OVT_TYPE                 PIO_OUTPUT_1
 
 /** OV_RST pin definition */
-//#define OV_RST_GPIO                    PIO_PC15_IDX
-//#define OV_RST_FLAGS                   (PIO_OUTPUT_1 | PIO_DEFAULT)
-//#define OV_RST_MASK                    PIO_PC15
-//#define OV_RST_PIO                     PIOC
-//#define OV_RST_ID                      ID_PIOC
-//#define OV_RST_TYPE                    PIO_OUTPUT_1
+#define OV_RST_GPIO                    PIO_PA20_IDX
+#define OV_RST_FLAGS                   (PIO_OUTPUT_1 | PIO_DEFAULT)
+#define OV_RST_MASK                    PIO_PC15
+#define OV_RST_PIO                     PIOC
+#define OV_RST_ID                      ID_PIOC
+#define OV_RST_TYPE                    PIO_OUTPUT_1
 
 /** OV_FSIN definition */
 //#define OV_FSIN_GPIO                   PIO_PA21_IDX
@@ -226,7 +227,7 @@
 #define OV_DATA_BUS_ATTR               PIO_DEFAULT
 
 // RST Pin (this is only driven high)
-#define OV2640_RST_MASK					PIO_PA20_IDX
+//#define OV2640_RST_MASK					PIO_PA20_IDX
 
 
 
@@ -236,7 +237,7 @@
 #define WIFI_ID_USART				ID_USART0
 #define WIFI_USART					USART0
 #define WIFI_USART_BAUDRATE		115200
-#define wifi_usart_handler		USART0_Handler
+#define wifi_usart_handler			USART0_Handler
 #define USART_IRQn					USART0_IRQn
 
 #define ALL_INTERRUPT_MASK  0xffffffff

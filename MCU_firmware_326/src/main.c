@@ -89,9 +89,9 @@ int main (void)
 	ioport_set_pin_dir(WIFI_RESET_MASK, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_mode(WIFI_RESET_MASK, IOPORT_MODE_PULLUP);
 
-	// RST Pin Management - for camera
-	ioport_set_pin_dir(OV2640_RST_MASK,IOPORT_DIR_OUTPUT);
-	ioport_set_pin_level(OV2640_RST_MASK,true);
+	//// RST Pin Management - for camera
+	//ioport_set_pin_dir(OV2640_RST_MASK,IOPORT_DIR_OUTPUT);
+	//ioport_set_pin_level(OV2640_RST_MASK,true);
 
 	// Reset wifi chip
 	ioport_set_pin_level(WIFI_RESET_MASK,false);
@@ -135,11 +135,21 @@ int main (void)
 
 
 
-
+	bool cap_success = 0;
 
 	// Test Loop, REMOVE BEFORE TESTING NONCAMERA FUNCTIONS
 	while (1) {
 		start_capture();
+		delay_ms(1000);
+		if (len_success) {
+			write_image_to_web();
+		}
+		delay_ms(500);
+		
+		
+		
+		
+		
 	}
 
 
@@ -147,10 +157,10 @@ int main (void)
 
 
 
-
-
-
-	//// Loop while waiting for Network connection confirmation
+//
+//
+//
+	////// Loop while waiting for Network connection confirmation
 	//while (!ioport_get_pin_level(WIFI_NET_MASK))	{
 		//ioport_set_pin_level(LED_PIN,true);
 		//delay_ms(500);

@@ -16,8 +16,24 @@ uint32_t ul_id, ul_mask; //things in the interrupt function definition by defaul
 Pio *p_pio;
 uint8_t *p_uc_buf; //buffer to store the image in
 uint32_t ul_size; //size of the buffer
+uint8_t len_success;
 
-uint32_t image_size;
+volatile uint32_t image_size;
+volatile uint32_t start_pos;
+volatile uint32_t end_pos;
+volatile uint8_t image_started; //logical T/F
+volatile uint8_t image_ended;
+volatile uint8_t g_p_uc_cap_dest_buf[100000];
+volatile uint8_t first_byte_sent;
+volatile uint8_t last_byte_sent;
+volatile uint8_t second_to_last_byte_sent;
+volatile uint8_t third_to_last_byte_sent;
+volatile uint8_t second_byte_sent;
+volatile uint8_t first_byte_unsent;
+volatile uint8_t third_byte_sent;
+volatile uint32_t last_byte_index;
+volatile uint8_t image_sent_flag;
+
 
 //DECLARE camera functions here
 void vsync_handler(uint32_t ul_id, uint32_t ul_mask);

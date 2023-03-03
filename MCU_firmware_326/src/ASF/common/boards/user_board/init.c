@@ -24,7 +24,7 @@ void board_init(void)
 	gpio_configure_pin(TWI0_CLK_GPIO, TWI0_CLK_FLAGS);
 	
 	// Data Bus and Camera Utility Pin config
-	//gpio_configure_pin(OV2640_RST_MASK, OV2640_RST_MASK);
+	gpio_configure_pin(OV_RST_GPIO, OV_RST_TYPE);
 	gpio_configure_pin(OV_HSYNC_GPIO, OV_HSYNC_FLAGS);
 	gpio_configure_pin(OV_VSYNC_GPIO, OV_VSYNC_FLAGS);
 	gpio_configure_pin(OV_DATA_BUS_D2, OV_DATA_BUS_FLAGS);

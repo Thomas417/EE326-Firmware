@@ -20,9 +20,11 @@ static uint32_t gs_ul_spi_cmd = RC_SYN; /* Current SPI return code. */
 static uint32_t gs_ul_spi_state = 0; /* Current SPI state. */
 
 /* 64 bytes data buffer for SPI transfer and receive. */
-static uint8_t *gs_puc_transfer_buffer; /* Pointer to transfer buffer. */
-static uint32_t gs_ul_transfer_index; /* Transfer buffer index. */
+volatile uint8_t *gs_puc_transfer_buffer; /* Pointer to transfer buffer. */
+volatile uint32_t gs_ul_transfer_index; /* Transfer buffer index. */
 volatile uint32_t gs_ul_transfer_length; /* Transfer buffer length. */
+volatile uint32_t times_through_buffer;
+
 
 
 // UART Communication and Control Line Variables
@@ -32,6 +34,10 @@ volatile uint32_t input_pos_wifi = 0;
 volatile bool command_flag = false;
 
 //DEFINE WiFi functions here
+
+char buff_storage[50];
+
+
 
 //----------------TODO: USART functions----------------//
 
@@ -181,20 +187,44 @@ void wifi_spi_handler(void){
 	static uint16_t data;
 	uint8_t uc_pcs;
 
+
+	//remove later
+	//gs_ul_transfer_index++;
+	//times_through_buffer++;
+
+
+
 	//if status register says "ready" and Receive Data Register Full
 	if (spi_read_status(SPI_SLAVE_BASE) & SPI_SR_RDRF) {
 			
 		spi_read(SPI_SLAVE_BASE, &data, &uc_pcs);
-		gs_puc_transfer_buffer[gs_ul_transfer_index] = data;
-		gs_ul_transfer_index++;
-		gs_ul_transfer_length--;
+		//times_through_buffer++;
+
+		
+		//gs_puc_transfer_buffer[gs_ul_transfer_index] = data;
 			
-		if (gs_ul_transfer_length) {
-			
+		if (gs_ul_transfer_length--) {
 			//transfer one byte of image
-			spi_write(SPI_SLAVE_BASE,
-			gs_puc_transfer_buffer[gs_ul_transfer_index], 0, 0);
+			spi_write(SPI_SLAVE_BASE, g_p_uc_cap_dest_buf[gs_ul_transfer_index++], 0, 0);
+			//spi_write(SPI_SLAVE_BASE, (g_p_uc_cap_dest_buf[gs_ul_transfer_index]), 0, 0);
+			//gs_ul_transfer_index++;
+
 		}
+		
+		//if (gs_ul_transfer_length == 0) {
+			//last_byte_sent = g_p_uc_cap_dest_buf[gs_ul_transfer_index];
+			//second_to_last_byte_sent = g_p_uc_cap_dest_buf[gs_ul_transfer_index - 1];
+			//third_to_last_byte_sent = g_p_uc_cap_dest_buf[gs_ul_transfer_index - 2];
+			//last_byte_index = gs_ul_transfer_index;
+		//}
+		//else if (gs_ul_transfer_index == start_pos + 1) {
+			//first_byte_sent =g_p_uc_cap_dest_buf[gs_ul_transfer_index-1];
+			////second_byte_sent = g_p_uc_cap_dest_buf[gs_ul_transfer_index];
+		//}
+		//else if (gs_ul_transfer_index == start_pos + 2) {
+			//second_byte_sent = g_p_uc_cap_dest_buf[gs_ul_transfer_index-1];
+		//}
+		
 	}
 }
 
@@ -207,14 +237,11 @@ void configure_spi(void){
 	NVIC_EnableIRQ(SPI_IRQn);
 	
 	//Configuration of SPI port used to send images to the ESP32.
-	spi_enable_clock(SPI_SLAVE_BASE);
-	spi_disable(SPI_SLAVE_BASE);
-	spi_set_clock_polarity(SPI_SLAVE_BASE, SPI_CHIP_SEL, SPI_CLK_POLARITY);
-	spi_set_clock_phase(SPI_SLAVE_BASE, SPI_CHIP_SEL, SPI_CLK_PHASE);
-	spi_set_bits_per_transfer(SPI_SLAVE_BASE, SPI_CHIP_SEL, SPI_CSR_BITS_8_BIT);
+	
+
 	
 	spi_peripheral_initialize();
-	spi_enable(SPI_SLAVE_BASE);
+	
 	
 	/* Start waiting command. */
 	prepare_spi_transfer();
@@ -222,25 +249,34 @@ void configure_spi(void){
 
 void spi_peripheral_initialize(void){
 	//Initialize the SPI port as a peripheral (slave) device.
+	spi_enable_clock(SPI_SLAVE_BASE);
+	spi_disable(SPI_SLAVE_BASE);
 	spi_reset(SPI_SLAVE_BASE);
 	spi_set_slave_mode(SPI_SLAVE_BASE);
 	spi_disable_mode_fault_detect(SPI_SLAVE_BASE);
 	spi_set_peripheral_chip_select_value(SPI_SLAVE_BASE, SPI_CHIP_PCS);
+	spi_set_clock_polarity(SPI_SLAVE_BASE, SPI_CHIP_SEL, SPI_CLK_POLARITY);
+	spi_set_clock_phase(SPI_SLAVE_BASE, SPI_CHIP_SEL, SPI_CLK_PHASE);
+	spi_set_bits_per_transfer(SPI_SLAVE_BASE, SPI_CHIP_SEL, SPI_CSR_BITS_8_BIT);
 	spi_enable_interrupt(SPI_SLAVE_BASE, SPI_IER_RDRF);	
+	spi_enable(SPI_SLAVE_BASE);
 	
 }
 
 void prepare_spi_transfer(void){
 	//Set necessary parameters to prepare for SPI transfer.
-	gs_ul_transfer_length = MAX_LENGTH;
-	gs_ul_transfer_index = 0;
+	gs_puc_transfer_buffer = g_p_uc_cap_dest_buf;
+	gs_ul_transfer_index = start_pos;
+	// gs_ul_transfer_length = image_size;
+	gs_ul_transfer_length = image_size+1;
+	image_sent_flag = 0;
 	
 	
-	char* spi_test[1000];
-	sprintf(spi_test,"Test");
+	//char* spi_test[1000];
+	// sprintf(spi_test,"Test");
 	
 	
-	spi_write(SPI_SLAVE_BASE, gs_puc_transfer_buffer[gs_ul_transfer_index], 0,0);
+	//spi_write(SPI_SLAVE_BASE, gs_puc_transfer_buffer[gs_ul_transfer_index], 0,0);
 	//sprintf(gs_puc_transfer_buffer,)
 	
 }
@@ -255,18 +291,26 @@ void write_image_to_web(void){
 	 //(illustrated in Appendix C):
 	
 	if (image_size == 0) { return; }
+	
+		//first_byte_sent = gs_puc_transfer_buffer[gs_ul_transfer_index];
+		//second_byte_sent = gs_puc_transfer_buffer[gs_ul_transfer_index + 1];
+		//first_byte_unsent = gs_puc_transfer_buffer[gs_ul_transfer_index -1];
+		//last_byte_sent = gs_puc_transfer_buffer[gs_ul_transfer_index + gs_ul_transfer_length];
 
-	 //Configure the SPI interface to be ready for a transfer by setting its parameters appropriately.
-	 prepare_spi_transfer();
+		//Configure the SPI interface to be ready for a transfer by setting its parameters appropriately.
+		prepare_spi_transfer();
 
-	 //Issue the command “image_transfer xxxx”, where xxxx is replaced by the length of the
-	 //image you want to transfer.
-	 image_size = 1000;
-	 sprintf(input_line_wifi, "image_transfer %d", image_size);
-	 write_wifi_command(input_line_wifi, 1);
-	 delay_ms(500);
+		//Issue the command “image_transfer xxxx”, where xxxx is replaced by the length of the
+		//image you want to transfer.
+		char* command_buffer[100];
+		 //image_size = 1000;
+		 //sprintf(command_buffer, "image_transfer %d", image_size); // Full image transfer command
+		sprintf(command_buffer, "image_test %d", image_size+3); // Test image transfer command
+		write_wifi_command(command_buffer, 5);
+		//while (!image_sent_flag){}
+		delay_ms(500);
 	 
-	 //The ESP32 will then set the “command complete” pin low and begin transferring the image
-	 //over SPI. //After the image is done sending, the ESP32 will set the “command complete” pin high. The
-	 //MCU should sense this and then move on.
+		 //The ESP32 will then set the “command complete” pin low and begin transferring the image
+		 //over SPI. //After the image is done sending, the ESP32 will set the “command complete” pin high. The
+		 //MCU should sense this and then move on.
 }
