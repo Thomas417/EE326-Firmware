@@ -1,6 +1,7 @@
 .bio_div {
     width: 100%;
     display: flex;
+    background-color: skyblue;
 }
 
 .bio_pic {
@@ -20,9 +21,13 @@
 
 #bios {
     text-align: center;
+    font-family: monospace;
 }
 
 .title_text {
     text-align:center;
     font-size: 200%;
+    font-family: monospace;
+    font: "optima";
+    background-color: coral;
 }

@@ -41,10 +41,11 @@ function onOpen(evt) { // when handshake is complete:
     b.innerText = "Stop Webcam";
 
 	//*** Change the title attribute of the button to display "Click to stop webcam" ***//
+    b.title = "Click to stop webcam";
     
 
 	//*** Enable the button ***//
-
+    b.disabled = false;
 
 	buttonClicked = false;
 }
@@ -52,11 +53,13 @@ function onOpen(evt) { // when handshake is complete:
 function onClose(evt) { // when socket is closed:
 	writeToScreen("Disconnected. Error: " + evt);
 	//*** Change the text of the button to read "Start Webcam" ***//
+    b.innerText = "Start Webcam";
         
     //*** Change the title attribute of the button to display "Click to start webcam" ***//
-        
-    //*** Enable the button ***//
+    b.title = "Click to start webcam";    
     
+    //*** Enable the button ***//
+     b.disabled = false;
     
     // If the user never actually clicked the button to stop the webcam, reconnect.
 	if (buttonClicked == false) {
