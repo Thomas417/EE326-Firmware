@@ -2,6 +2,7 @@ var websocket = null;
 var localhost = "";
 var b = document.getElementById('btnWS');
 var buttonClicked = false;
+var stamp = document.getElementById('timestamp');
 
 // Initialize the websocket
 function init() {
@@ -70,7 +71,9 @@ function onClose(evt) { // when socket is closed:
 
 function onMessage(msg) {
 	//*** Display a new timestamp ***//
-	
+    //stamp.innerText("Time:") // How do you get a timestamp?
+	writeToScreen('New Image at: ', Date(Date.now))
+    
 	// Get the image just taken from WiFi chip's RAM.
 	var image = document.getElementById('image');
 	var reader = new FileReader();
@@ -88,17 +91,34 @@ function onError(evt) { // when an error occurs
 	writeToScreen("Websocket error");
 	
 	//*** Change the text of the button to read "Start Webcam" ***//
-		
+    b.innerText = "Start Webcam";
     //*** Change the title attribute of the button to display "Click to start webcam" ***//
+    b.title = "Click to start webcam";  
 		
     //*** Enable the button ***//
-	
+	b.disabled = false;
 	
 	buttonClicked = false;
 }
 
 // Set up event listeners
 //*** When the button is clicked, disable it and set the 'buttonClicked' variable to true, and depending on whether a Websocket is open or not, either run "doConnect()" or "websocket.close()" ***//
+
+function onClick (evt) { // Our function that runs when button is clicked
+    // Disable button
+    b.disabled = true;
+    
+    // Set click var
+    buttonClicked = true;
+    
+    // Run doConnect() if Websocket is closed or websocket.close() if opn
+    if (b.innerText == "Start Webcam") {
+        doConnect();
+    }
+    else if (b.innerText == "Stop Webcam"){
+        websocket.close();
+    }
+}
 
 
 // Function to display to the message box

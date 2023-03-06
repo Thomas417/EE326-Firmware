@@ -5,22 +5,34 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>EE326 WEBCAM</title>
-        <meta name="description" content="A page to display .">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type"text/css" href="webcam_styles.css">
         <!--<link rel="stylesheet" href="main.css"-->
     </head>
     <body>
 
         <!--Navigation bar for getting to other pages on site -->
-        <a href="index.html">homepage</a> |
-        <a href="webcam.html">webcam</a> |
-        <a href="info.html">info</a> 
+        <a class="header" href="index.html">homepage</a> |
+        <a class="header" href="webcam.html">webcam</a> |
+        <a class="header" href="info.html">info</a> 
         
 
-    <h1>
+    <h1 class="title_text">
         Webcam Page
     </h1>
 
-        
+   
+    <button id="btnWS" title="Click to start webcam">Start Webcam</button>
+   
+    <h3 id="timestamp">Time Stamp</h3>
+   
+    <img class="video_zone" id="image" alt="My webcam image" width="640" height="480">
+   
+    <h3>Log</h3>
+   
+    <textarea id="msg" rows="20" cols="50">&nbsp;</textarea>
+    
+    <script src="webcam_scripts.js"></script>
         
         
     </body>
