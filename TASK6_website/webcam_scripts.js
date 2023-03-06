@@ -72,7 +72,9 @@ function onClose(evt) { // when socket is closed:
 function onMessage(msg) {
 	//*** Display a new timestamp ***//
     //stamp.innerText("Time:") // How do you get a timestamp?
-	writeToScreen('New Image at: ', Date(Date.now))
+    let time_ms = Date.now();
+    let date = Date(time_ms);
+	writeToScreen('New Image at: ' + date);
     
 	// Get the image just taken from WiFi chip's RAM.
 	var image = document.getElementById('image');
@@ -102,9 +104,10 @@ function onError(evt) { // when an error occurs
 }
 
 // Set up event listeners
+b.addEventListener('click',onClick);
 //*** When the button is clicked, disable it and set the 'buttonClicked' variable to true, and depending on whether a Websocket is open or not, either run "doConnect()" or "websocket.close()" ***//
 
-function onClick (evt) { // Our function that runs when button is clicked
+function onClick() { // Our function that runs when button is clicked
     // Disable button
     b.disabled = true;
     
