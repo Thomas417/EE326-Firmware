@@ -79,7 +79,7 @@ int main (void)
 
 
 	// Control line pin ioport config
-	ioport_set_pin_dir(WIFI_COMM_MASK,IOPORT_DIR_INPUT);
+	//ioport_set_pin_dir(WIFI_COMM_MASK,IOPORT_DIR_INPUT);
 	ioport_set_pin_dir(WIFI_NET_MASK,IOPORT_DIR_INPUT);
 	ioport_set_pin_dir(WIFI_CLIENT_PIN_MASK,IOPORT_DIR_INPUT);
 
@@ -163,7 +163,9 @@ int main (void)
 			provisioning_flag = false;
 			//ioport_set_pin_level(LED_PIN2,false);
 			//delay_ms(500);
+			write_wifi_command("get mac",1);
 		}
+		
 		//ioport_set_pin_level(LED_PIN,false);
 		//delay_ms(500);
 	}
@@ -176,7 +178,7 @@ int main (void)
 		ioport_set_pin_level(WIFI_RESET_MASK,false);
 		delay_ms(100);
 		ioport_set_pin_level(WIFI_RESET_MASK,true);
-		delay_ms(3000);
+		delay_ms(5000);
 	
 		//ioport_set_pin_level(LED_PIN,true);
 		//delay_ms(1000);
@@ -185,7 +187,7 @@ int main (void)
 	
 		// Send UART Test command and wait 10 seconds
 		write_wifi_command("test",10);
-		delay_s(5);
+		delay_s(8);
 	
 	}
 
@@ -205,12 +207,13 @@ int main (void)
 
 			provisioning_flag = false;
 		}
+		
 	
 		if (ioport_get_pin_level(WIFI_NET_MASK) && ioport_get_pin_level(WIFI_CLIENT_PIN_MASK))	{
 			// Send image command
 			
 			start_capture();
-			delay_ms(100);//500
+			//delay_ms(100);//500
 			if (len_success) {
 				write_image_to_web();
 			}

@@ -138,10 +138,10 @@ void write_wifi_command(char* comm, uint8_t cnt) //TODO: Implement timeout mecha
 	counts = 0;
 	// Wait time = cnt seconds
 	ioport_set_pin_level(LED_PIN2,true);
-	while (counts < cnt && command_flag==false)	{
+	while ((counts < cnt) && (command_flag==false))	{
 	}
 	//ioport_set_pin_level(LED_PIN,false);
-	ioport_set_pin_level(LED_PIN2,false);
+	//ioport_set_pin_level(LED_PIN2,false);
 	command_flag = false;
 }
 
@@ -307,10 +307,10 @@ void write_image_to_web(void){
 		char* command_buffer[100];
 		 //image_size = 1000;
 		 //sprintf(command_buffer, "image_transfer %d", image_size); // Full image transfer command
-		sprintf(command_buffer, "image_transfer %d", image_size+3); // Test image transfer command
-		write_wifi_command(command_buffer, 5);
+		sprintf(command_buffer, "image_test %d", image_size+3); // Test image transfer command
+		write_wifi_command(command_buffer, 1);
 		//while (!image_sent_flag){}
-		delay_ms(500);
+		//delay_ms(100);
 	 
 		//The ESP32 will then set the “command complete” pin low and begin transferring the image
 		//over SPI. //After the image is done sending, the ESP32 will set the “command complete” pin high. The
