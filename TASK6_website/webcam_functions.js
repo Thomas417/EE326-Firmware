@@ -92,36 +92,36 @@ function onError(evt) { // when an error occurs
 	websocket.close();
 	writeToScreen("Websocket error");
 	
-//	//*** Change the text of the button to read "Start Webcam" ***//
-//    b.innerText = "Start Webcam";
-//    //*** Change the title attribute of the button to display "Click to start webcam" ***//
-//    b.title = "Click to start webcam";  
-//		
-//    //*** Enable the button ***//
-//	b.disabled = false;
+	//*** Change the text of the button to read "Start Webcam" ***//
+    b.innerText = "Start Webcam";
+    //*** Change the title attribute of the button to display "Click to start webcam" ***//
+    b.title = "Click to start webcam";  
+		
+    //*** Enable the button ***//
+	b.disabled = false;
 	
 	buttonClicked = false;
 }
 
 // Set up event listeners
-//b.addEventListener('click',onClick);
+b.addEventListener('click',onClick);
 //*** When the button is clicked, disable it and set the 'buttonClicked' variable to true, and depending on whether a Websocket is open or not, either run "doConnect()" or "websocket.close()" ***//
 
-//function onClick() { // Our function that runs when button is clicked
-//    // Disable button
-//    b.disabled = true;
-//    
-//    // Set click var
-//    buttonClicked = true;
-//    
-//    // Run doConnect() if Websocket is closed or websocket.close() if opn
-//    if (b.innerText == "Start Webcam") {
-//        doConnect();
-//    }
-//    else if (b.innerText == "Stop Webcam"){
-//        websocket.close();
-//    }
-//}
+function onClick() { // Our function that runs when button is clicked
+    // Disable button
+    b.disabled = true;
+    
+    // Set click var
+    buttonClicked = true;
+    
+    // Run doConnect() if Websocket is closed or websocket.close() if opn
+    if (b.innerText == "Start Webcam") {
+        doConnect();
+    }
+    else if (b.innerText == "Stop Webcam"){
+        websocket.close();
+    }
+}
 
 
 // Function to display to the message box
