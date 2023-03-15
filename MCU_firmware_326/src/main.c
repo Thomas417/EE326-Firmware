@@ -70,6 +70,11 @@ int main (void)
 	 //* Send �test� to the WiFi module and wait for a response of �SUCCESS�. If you do not receive
 	 //it, wait 10 seconds, reset the WiFi module, and try again.
 	 
+	
+	// Camera Test Capture:
+	start_capture(); 
+	 
+	
 	// Thomas' Main Code Loop Code
 
 	ioport_set_pin_dir(LED_PIN,IOPORT_DIR_OUTPUT);

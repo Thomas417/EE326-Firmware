@@ -299,7 +299,7 @@ void write_image_to_web(void){
 		//last_byte_sent = gs_puc_transfer_buffer[gs_ul_transfer_index + gs_ul_transfer_length];
 
 		//Configure the SPI interface to be ready for a transfer by setting its parameters appropriately.
-		times_through_buffer = 0;
+		//times_through_buffer = 0;
 		prepare_spi_transfer();
 
 		//Issue the command “image_transfer xxxx”, where xxxx is replaced by the length of the

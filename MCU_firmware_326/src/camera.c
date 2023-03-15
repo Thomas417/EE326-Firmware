@@ -201,7 +201,7 @@ uint8_t start_capture(void){
 	/* Check Size  */
 	len_success = 0;
 	find_image_len();
-	return len_success;
+	//return len_success;
 	
 }
 
@@ -220,7 +220,7 @@ uint8_t find_image_len(void){
 	uint8_t complete = 0;
 	
 	for (uint32_t i = 0; i < 100000; ++i){
-				
+		
 		//look for start of image
 		//#ifndef next_byte
 		//
@@ -234,14 +234,16 @@ uint8_t find_image_len(void){
 			image_ended = 0;
 			start_pos = i;
 		}
-		if (byte == 0xff && next_byte == 0xd9) {
+		else if (byte == 0xff && next_byte == 0xd9 && image_started == 1) {
 			image_ended = 1;
-			end_pos = i;
-		}
-		if (image_started && image_ended) {
+			end_pos = i+1;
 			len_success = 1;
-			break; 			//add +1 to the length counter
+			break;
 		}
+		//if (image_started && image_ended) {
+			//len_success = 1;
+			//break; 			//add +1 to the length counter
+		//}
 		image_size += image_started;
 		}
 		
