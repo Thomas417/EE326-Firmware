@@ -107,7 +107,7 @@
 #define UART_BAUDRATE      115200 /* UART baudrate. */
 #define MAX_DATA_BLOCK_NUMBER  4 /* Data block number. */
 #define MAX_RETRY    4 /* Max retry times. */
-#define SPI_BAUDRATE		500000 /* SPi baudrate, used in UART command to ESP32 to set the SPI baudrate (wow crazy) */
+#define SPI_BAUDRATE		800000 /* SPi baudrate, used in UART command to ESP32 to set the SPI baudrate (wow crazy) */
 
 
 /******************************* TWI definition*********************************/
